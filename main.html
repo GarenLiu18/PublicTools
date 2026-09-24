@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ToolBox</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: #181818;
+        color: #eee;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 48px 24px;
+    }
+
+    header {
+        margin-bottom: 40px;
+    }
+
+    h1 {
+        margin: 0 0 10px 0;
+        font-size: 32px;
+    }
+
+    .subtitle {
+        color: #888;
+        font-size: 14px;
+    }
+
+    .tools {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    .tool-card {
+        display: block;
+        padding: 24px;
+
+        background: #242424;
+        border: 1px solid #333;
+        border-radius: 10px;
+
+        color: inherit;
+        text-decoration: none;
+
+        transition:
+            transform 0.15s,
+            border-color 0.15s,
+            background 0.15s;
+    }
+
+    .tool-card:hover {
+        transform: translateY(-3px);
+        border-color: #3b82f6;
+        background: #292929;
+    }
+
+    .tool-icon {
+        font-size: 32px;
+        margin-bottom: 16px;
+    }
+
+    .tool-name {
+        margin-bottom: 8px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .tool-description {
+        color: #999;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>ToolBox</h1>
+
+        <div class="subtitle">
+            Development Tools
+        </div>
+    </header>
+
+
+    <div class="tools">
+
+        <a
+            class="tool-card"
+            href="./SequanceChecker.html"
+        >
+
+            <div class="tool-icon">
+                🎞️
+            </div>
+
+            <div class="tool-name">
+                SequanceChecker
+            </div>
+
+            <div class="tool-description">
+                檢視 PNG Sequence 與 GIF 動畫，
+                並快速複製 Sequence 資源路徑。
+            </div>
+
+        </a>
+
+
+        <!--
+        未來新增工具直接複製：
+
+        <a
+            class="tool-card"
+            href="./YourTool.html"
+        >
+
+            <div class="tool-icon">
+                🛠️
+            </div>
+
+            <div class="tool-name">
+                YourTool
+            </div>
+
+            <div class="tool-description">
+                工具說明
+            </div>
+
+        </a>
+        -->
+
+    </div>
+
+</div>
+
+</body>
+</html>
