@@ -27,7 +27,7 @@
   .brand-mark { width: 34px; height: 34px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 18px; font-weight: 800; }
   .brand-title { font-size: 15px; font-weight: 750; letter-spacing: .01em; }
   .brand-sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
-  .header-actions { display: flex; gap: 8px; align-items: center; }
+  .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .btn { border: 1px solid var(--line); background: #fff; color: #445064; border-radius: 9px; padding: 9px 12px; font-size: 12px; font-weight: 650; transition: .15s ease; }
   .btn:hover { border-color: #c7cfda; background: #fafbfc; }
   .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -50,14 +50,21 @@
   .sidebar-search input:focus { border-color: #e3a27c; box-shadow: 0 0 0 3px rgba(217,119,54,.10); background: #fff; }
   .search-status { padding: 7px 13px 0; color: var(--muted); font-size: 9px; }
   .command-list { padding: 8px; display: flex; flex-direction: column; gap: 5px; overflow-y: auto; max-height: calc(100vh - 185px); }
-  .command-item { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; border: 1px solid transparent; border-radius: 10px; padding: 10px 9px; background: transparent; color: var(--text); }
+  .command-item { display: flex; align-items: center; gap: 7px; width: 100%; text-align: left; border: 1px solid transparent; border-radius: 10px; padding: 9px 8px; background: transparent; color: var(--text); cursor: grab; user-select: none; }
   .command-item:hover { background: #f8f9fb; }
+  .command-item:active { cursor: grabbing; }
+  .command-item.dragging { opacity: .42; }
+  .command-item.drag-over { background: #fff5ed; border-color: #e6a77e; }
+  .drag-grip { flex: 0 0 auto; color: #aab2be; font-size: 16px; line-height: 1; cursor: grab; }
+  .command-select { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1; padding: 0; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+  .command-select:focus-visible { outline: 2px solid #d97736; outline-offset: 3px; border-radius: 5px; }
   .command-item.active { background: var(--accent-soft); border-color: #f3d7c5; }
   .command-index { width: 25px; height: 25px; border-radius: 7px; display: grid; place-items: center; color: #8792a2; background: #f0f2f5; font-size: 10px; font-weight: 700; flex: 0 0 auto; }
   .command-item.active .command-index { background: #f5d9c7; color: #a9501d; }
   .command-info { min-width: 0; flex: 1; }
   .command-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; font-weight: 750; }
   .command-desc { color: var(--muted); font-size: 10px; margin-top: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .command-date { display: block; color: #a0a8b4; font-size: 9px; margin-top: 4px; }
   .sidebar-foot { margin-top: auto; padding: 12px 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; line-height: 1.6; }
   .editor-panel { flex-direction: column; }
   .editor-scroll { padding: 15px; overflow-y: auto; max-height: calc(100vh - 138px); }
@@ -102,6 +109,7 @@
   .doc-heading h1 { margin: 0; font-size: clamp(23px, 3vw, 33px); line-height: 1.2; letter-spacing: -.025em; }
   .doc-command-label { font: 700 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--accent); background: var(--accent-soft); border: 1px solid #f5dfd1; border-radius: 8px; padding: 8px 10px; white-space: nowrap; }
   .doc-summary { margin: -10px 0 22px; color: #697587; font-size: 12px; line-height: 1.7; }
+  .doc-created-date { margin: -12px 0 22px; color: #a0a8b4; font-size: 10px; }
   .doc-legend { white-space: pre-wrap; background: #fffaf6; color: #bb672f; border: 1px solid #f4e4d8; border-radius: 9px; padding: 12px 14px; font: 11px/1.7 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; margin-bottom: 25px; }
   .doc-section-label { color: #8b95a4; font-size: 9px; font-weight: 800; letter-spacing: .1em; margin: 24px 0 12px; text-transform: uppercase; }
   .doc-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 24px 0 12px; }
@@ -148,7 +156,8 @@
   @media (max-width: 620px) {
     .app-header { padding: 0 12px; height: 60px; }
     .brand-sub { display: none; }
-    .header-actions .btn { padding: 8px; font-size: 10px; }
+    .header-actions { justify-content: flex-end; max-width: 68%; gap: 5px; }
+    .header-actions .btn { padding: 7px 8px; font-size: 9px; }
     .workspace { display: flex; flex-direction: column; padding: 8px; }
     .sidebar { min-height: 150px; }
     .command-list { flex-direction: row; max-height: 100px; overflow-x: auto; }
@@ -178,8 +187,10 @@
   </div>
   <div class="header-actions">
     <button class="btn subtle" id="toggleEditorBtn" aria-pressed="false">編輯模式</button>
+    <button class="btn" id="importJsonBtn">匯入資料 JSON</button>
     <button class="btn" id="exportJsonBtn">匯出資料 JSON</button>
     <button class="btn primary" id="exportHtmlBtn">匯出整頁 HTML</button>
+    <input id="importJsonInput" type="file" accept=".json,application/json" hidden />
   </div>
 </header>
 
@@ -195,7 +206,7 @@
     </div>
     <div class="search-status" id="searchStatus"></div>
     <div class="command-list" id="commandList"></div>
-    <div class="sidebar-foot">編輯草稿只保存在目前瀏覽器。<br>更新網站時，下載完整 index.html 並覆蓋 Git 專案中的網頁檔；JSON 可用來備份編輯資料。</div>
+    <div class="sidebar-foot">指令可拖曳排序，順序會同步套用到預覽與匯出。<br>JSON 可匯入／匯出備份；編輯草稿只保存在目前瀏覽器。<br>更新網站時，下載完整 index.html 並覆蓋 Git 專案中的網頁檔。</div>
   </aside>
 
   <section class="panel editor-panel">
@@ -210,6 +221,11 @@
         <div class="field">
           <label for="commandTitle">文件標題</label>
           <input id="commandTitle" data-field="title" placeholder="例如：SD 角色操作" />
+        </div>
+        <div class="field">
+          <label for="commandCreatedAt">創建日期</label>
+          <input id="commandCreatedAt" type="date" data-field="createdAt" />
+          <div class="hint">新增指令時會自動填入當天日期，也可以手動修改。</div>
         </div>
         <div class="field full">
           <label for="commandSummary">簡短說明</label>
@@ -279,6 +295,7 @@
     id: 'cmd-1',
     name: '@sdChar',
     title: 'SD 角色操作',
+    createdAt: '',
     summary: '在指定場景位置生成 SD 角色，並設定角色的移動、朝向與動畫。',
     legend: 'spos : spawn position（生成位置）\nmpos : move position（移動位置）\ndir : direction（方向）\nmdur : move duration（移動耗時）',
     params: [
@@ -300,12 +317,41 @@
   let searchQuery = '';
   let toastTimer;
 
+  function todayLocalDate() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+  function normalizeDate(value) {
+    const match = String(value || '').match(/^(\d{4}-\d{2}-\d{2})/);
+    return match ? match[1] : '';
+  }
+  function normalizeCommand(raw, index = 0) {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new Error(`第 ${index + 1} 筆指令格式錯誤。`);
+    if (raw.params !== undefined && !Array.isArray(raw.params)) throw new Error(`第 ${index + 1} 筆指令的 params 必須是陣列。`);
+    return {
+      id: typeof raw.id === 'string' && raw.id.trim() ? raw.id : newId(),
+      name: String(raw.name ?? '@command'),
+      title: String(raw.title ?? '未命名指令'),
+      createdAt: normalizeDate(raw.createdAt),
+      summary: String(raw.summary ?? ''),
+      legend: String(raw.legend ?? ''),
+      params: (raw.params || []).map((p, paramIndex) => {
+        if (!p || typeof p !== 'object' || Array.isArray(p)) throw new Error(`第 ${index + 1} 筆指令的第 ${paramIndex + 1} 個參數格式錯誤。`);
+        return {
+          key: String(p.key ?? ''), value: String(p.value ?? ''),
+          label: String(p.label ?? ''), desc: String(p.desc ?? ''), flag: Boolean(p.flag)
+        };
+      }),
+      rules: String(raw.rules ?? ''),
+      note: String(raw.note ?? '')
+    };
+  }
   function loadData() {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length) return parsed;
+        if (Array.isArray(parsed) && parsed.length) return parsed.map((item, index) => normalizeCommand(item, index));
       }
     } catch (e) { console.warn('讀取本機草稿失敗', e); }
     return JSON.parse(JSON.stringify(starterData));
@@ -353,6 +399,7 @@
     return `<div class="doc-kicker">COMMAND REFERENCE</div>
       <div class="doc-heading"><h1>${esc(command.title || '未命名指令')}</h1><div class="doc-command-label">${esc(command.name || '@command')}</div></div>
       ${command.summary ? `<p class="doc-summary">${esc(command.summary)}</p>` : ''}
+      <div class="doc-created-date">創建日期：${esc(command.createdAt || '未記錄')}</div>
       ${legend}
       <div class="doc-section-heading"><div class="doc-section-label">指令格式與參數</div><button type="button" class="copy-command-btn" data-copy-command="${esc(fullCommandText(command))}">複製完整指令</button></div>
       <div class="syntax-box">${syntaxHtml(command)}</div>
@@ -365,7 +412,7 @@
     const filtered = commands.map((command, index) => ({ command, index })).filter(({ command }) => {
       if (!query) return true;
       const searchableText = [
-        command.name, command.title, command.summary, command.legend, command.rules, command.note,
+        command.name, command.title, command.createdAt, command.summary, command.legend, command.rules, command.note,
         ...(command.params || []).flatMap(param => [param.key, param.value, param.label, param.desc])
       ].join(' ').toLocaleLowerCase();
       return searchableText.includes(query);
@@ -374,10 +421,13 @@
     document.getElementById('searchStatus').textContent = query ? `符合 ${filtered.length} / ${commands.length} 筆` : '';
     if (!commands.length) { list.innerHTML = '<div class="empty-state">目前沒有指令<br>請新增一筆指令。</div>'; return; }
     if (!filtered.length) { list.innerHTML = '<div class="empty-state">找不到符合的指令。<br>預覽仍保留目前選取的內容。</div>'; return; }
-    list.innerHTML = filtered.map(({ command: c, index }) => `<button class="command-item${c.id === selectedId ? ' active' : ''}" data-select-id="${esc(c.id)}">
-      <span class="command-index">${String(index + 1).padStart(2, '0')}</span>
-      <span class="command-info"><span class="command-code">${esc(c.name || '@command')}</span><span class="command-desc">${esc(c.title || '未命名指令')}</span></span>
-    </button>`).join('');
+    list.innerHTML = filtered.map(({ command: c, index }) => `<div class="command-item${c.id === selectedId ? ' active' : ''}" draggable="true" data-drag-id="${esc(c.id)}" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="${esc(c.id)}">
+        <span class="command-index">${String(index + 1).padStart(2, '0')}</span>
+        <span class="command-info"><span class="command-code">${esc(c.name || '@command')}</span><span class="command-desc">${esc(c.title || '未命名指令')}</span><span class="command-date">創建：${esc(c.createdAt || '未記錄')}</span></span>
+      </button>
+    </div>`).join('');
   }
   function renderEditor() {
     const c = current();
@@ -429,7 +479,7 @@ ${buildStaticHtml(items)}
 </html>`;
   }
   function staticCss() {
-    return `.sd-docs{display:grid;gap:28px;color:#273142;font-family:Arial,"Noto Sans TC","Microsoft JhengHei",sans-serif}.sd-doc-card{background:#fff;border:1px solid #e7e9ed;padding:34px;box-shadow:0 5px 22px rgba(20,30,45,.06);min-width:0}.sd-doc-card *{box-sizing:border-box}.sd-doc-card .doc-kicker{color:#a0a8b4;font-size:9px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}.sd-doc-card .doc-heading{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:22px}.sd-doc-card .doc-heading h1{margin:0;font-size:30px;line-height:1.2}.sd-doc-card .doc-command-label{font:700 12px monospace;color:#d97736;background:#fff2e9;border:1px solid #f5dfd1;border-radius:8px;padding:8px 10px;white-space:nowrap}.sd-doc-card .doc-summary{margin:-10px 0 22px;color:#697587;font-size:12px;line-height:1.7}.sd-doc-card .doc-section-label{color:#8b95a4;font-size:9px;font-weight:800;letter-spacing:.1em;margin:24px 0 12px;text-transform:uppercase}.sd-doc-card .doc-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 12px}.sd-doc-card .doc-section-heading .doc-section-label{margin:0}.sd-doc-card .copy-command-btn{flex:0 0 auto;border:1px solid #f0d7c6;border-radius:7px;padding:6px 10px;background:#fff8f3;color:#ad5a28;font-size:10px;font-weight:700;line-height:1.3;cursor:pointer}.sd-doc-card .copy-command-btn:hover{border-color:#dfaa87;background:#fff0e6}.sd-doc-card .doc-legend{white-space:pre-wrap;background:#fffaf6;color:#bb672f;border:1px solid #f4e4d8;border-radius:9px;padding:12px 14px;font:11px/1.7 monospace;margin-bottom:25px}.sd-doc-card .syntax-box{border:1px solid #e8ebf0;border-radius:12px;background:#fcfcfd;padding:16px}.sd-doc-card .syntax-line{display:flex;flex-wrap:wrap;align-items:stretch;gap:9px}.sd-doc-card .syntax-unit{min-width:70px;max-width:180px;display:flex;flex-direction:column;gap:7px}.sd-doc-card .syntax-token{display:inline-block;align-self:flex-start;border-bottom:3px solid #c46d32;padding:0 2px 7px;color:#252d3a;font:700 12px monospace;overflow-wrap:anywhere}.sd-doc-card .syntax-token.command-token{color:#456b98;font-size:13px}.sd-doc-card .syntax-label{color:#b66a36;font-size:10px;font-weight:750;line-height:1.45}.sd-doc-card .syntax-desc{color:#8993a1;font-size:9px;line-height:1.5}.sd-doc-card .doc-rules{padding-left:18px;margin:0;color:#576274;font-size:11px;line-height:1.8}.sd-doc-card .doc-rules li{padding-left:3px;margin:3px 0}.sd-doc-card .doc-note{border-left:3px solid #d88a55;padding:10px 13px;color:#687487;background:#fffaf6;font-size:11px;line-height:1.7;white-space:pre-wrap}.sd-doc-card .doc-footer{border-top:1px solid #edf0f3;margin-top:30px;padding-top:10px;color:#a0a8b4;font-size:9px;display:flex;justify-content:space-between}@media(max-width:600px){.sd-doc-card{padding:18px}.sd-doc-card .doc-heading{flex-direction:column;gap:10px}.sd-doc-card .doc-heading h1{font-size:24px}.sd-doc-card .doc-section-heading{align-items:flex-start;flex-wrap:wrap}}`;
+    return `.sd-docs{display:grid;gap:28px;color:#273142;font-family:Arial,"Noto Sans TC","Microsoft JhengHei",sans-serif}.sd-doc-card{background:#fff;border:1px solid #e7e9ed;padding:34px;box-shadow:0 5px 22px rgba(20,30,45,.06);min-width:0}.sd-doc-card *{box-sizing:border-box}.sd-doc-card .doc-kicker{color:#a0a8b4;font-size:9px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}.sd-doc-card .doc-heading{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:22px}.sd-doc-card .doc-heading h1{margin:0;font-size:30px;line-height:1.2}.sd-doc-card .doc-command-label{font:700 12px monospace;color:#d97736;background:#fff2e9;border:1px solid #f5dfd1;border-radius:8px;padding:8px 10px;white-space:nowrap}.sd-doc-card .doc-summary{margin:-10px 0 22px;color:#697587;font-size:12px;line-height:1.7}.sd-doc-card .doc-created-date{margin:-12px 0 22px;color:#a0a8b4;font-size:10px}.sd-doc-card .doc-section-label{color:#8b95a4;font-size:9px;font-weight:800;letter-spacing:.1em;margin:24px 0 12px;text-transform:uppercase}.sd-doc-card .doc-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 12px}.sd-doc-card .doc-section-heading .doc-section-label{margin:0}.sd-doc-card .copy-command-btn{flex:0 0 auto;border:1px solid #f0d7c6;border-radius:7px;padding:6px 10px;background:#fff8f3;color:#ad5a28;font-size:10px;font-weight:700;line-height:1.3;cursor:pointer}.sd-doc-card .copy-command-btn:hover{border-color:#dfaa87;background:#fff0e6}.sd-doc-card .doc-legend{white-space:pre-wrap;background:#fffaf6;color:#bb672f;border:1px solid #f4e4d8;border-radius:9px;padding:12px 14px;font:11px/1.7 monospace;margin-bottom:25px}.sd-doc-card .syntax-box{border:1px solid #e8ebf0;border-radius:12px;background:#fcfcfd;padding:16px}.sd-doc-card .syntax-line{display:flex;flex-wrap:wrap;align-items:stretch;gap:9px}.sd-doc-card .syntax-unit{min-width:70px;max-width:180px;display:flex;flex-direction:column;gap:7px}.sd-doc-card .syntax-token{display:inline-block;align-self:flex-start;border-bottom:3px solid #c46d32;padding:0 2px 7px;color:#252d3a;font:700 12px monospace;overflow-wrap:anywhere}.sd-doc-card .syntax-token.command-token{color:#456b98;font-size:13px}.sd-doc-card .syntax-label{color:#b66a36;font-size:10px;font-weight:750;line-height:1.45}.sd-doc-card .syntax-desc{color:#8993a1;font-size:9px;line-height:1.5}.sd-doc-card .doc-rules{padding-left:18px;margin:0;color:#576274;font-size:11px;line-height:1.8}.sd-doc-card .doc-rules li{padding-left:3px;margin:3px 0}.sd-doc-card .doc-note{border-left:3px solid #d88a55;padding:10px 13px;color:#687487;background:#fffaf6;font-size:11px;line-height:1.7;white-space:pre-wrap}.sd-doc-card .doc-footer{border-top:1px solid #edf0f3;margin-top:30px;padding-top:10px;color:#a0a8b4;font-size:9px;display:flex;justify-content:space-between}@media(max-width:600px){.sd-doc-card{padding:18px}.sd-doc-card .doc-heading{flex-direction:column;gap:10px}.sd-doc-card .doc-heading h1{font-size:24px}.sd-doc-card .doc-section-heading{align-items:flex-start;flex-wrap:wrap}}`;
   }
   function switchTab(tab) {
     const isCode = tab === 'code';
@@ -477,6 +527,43 @@ ${buildStaticHtml(items)}
     const button = e.target.closest('[data-select-id]'); if (!button) return;
     selectedId = button.dataset.selectId; renderAll();
   });
+  let draggingId = null;
+  const commandListElement = document.getElementById('commandList');
+  commandListElement.addEventListener('dragstart', e => {
+    const item = e.target.closest('[data-drag-id]');
+    if (!item) return;
+    draggingId = item.dataset.dragId;
+    item.classList.add('dragging');
+    if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', draggingId); }
+  });
+  commandListElement.addEventListener('dragover', e => {
+    const item = e.target.closest('[data-drag-id]');
+    if (!item || !draggingId || item.dataset.dragId === draggingId) return;
+    e.preventDefault();
+    commandListElement.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    item.classList.add('drag-over');
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+  });
+  commandListElement.addEventListener('drop', e => {
+    const target = e.target.closest('[data-drag-id]');
+    if (!target || !draggingId || target.dataset.dragId === draggingId) return;
+    e.preventDefault();
+    const fromIndex = commands.findIndex(c => c.id === draggingId);
+    const targetIndex = commands.findIndex(c => c.id === target.dataset.dragId);
+    if (fromIndex < 0 || targetIndex < 0) return;
+    const rect = target.getBoundingClientRect();
+    let insertIndex = targetIndex + (e.clientY > rect.top + rect.height / 2 ? 1 : 0);
+    const [moving] = commands.splice(fromIndex, 1);
+    if (fromIndex < insertIndex) insertIndex--;
+    commands.splice(insertIndex, 0, moving);
+    selectedId = moving.id;
+    saveData(); renderAll();
+    showToast('已更新指令順序');
+  });
+  commandListElement.addEventListener('dragend', () => {
+    draggingId = null;
+    commandListElement.querySelectorAll('.dragging, .drag-over').forEach(el => el.classList.remove('dragging', 'drag-over'));
+  });
   document.addEventListener('click', e => {
     const button = e.target.closest('.copy-command-btn');
     if (button) copyText(button.dataset.copyCommand || '');
@@ -506,11 +593,11 @@ ${buildStaticHtml(items)}
     document.getElementById('editorScroll').scrollTo({ top: document.getElementById('editorScroll').scrollHeight, behavior: 'smooth' });
   });
   document.getElementById('addCommandBtn').addEventListener('click', () => {
-    const c = { id: newId(), name: '@newCommand', title: '新指令', summary: '', legend: '', params: [], rules: '', note: '' };
+    const c = { id: newId(), name: '@newCommand', title: '新指令', createdAt: todayLocalDate(), summary: '', legend: '', params: [], rules: '', note: '' };
     commands.push(c); selectedId = c.id; searchQuery = ''; document.getElementById('commandSearch').value = ''; saveData(); renderAll();
   });
   document.getElementById('duplicateCommandBtn').addEventListener('click', () => {
-    const copy = JSON.parse(JSON.stringify(current())); copy.id = newId(); copy.name = (copy.name || '@command') + '_copy'; copy.title = (copy.title || '指令') + '（複本）';
+    const copy = JSON.parse(JSON.stringify(current())); copy.id = newId(); copy.createdAt = todayLocalDate(); copy.name = (copy.name || '@command') + '_copy'; copy.title = (copy.title || '指令') + '（複本）';
     commands.splice(commands.indexOf(current()) + 1, 0, copy); selectedId = copy.id; searchQuery = ''; document.getElementById('commandSearch').value = ''; saveData(); renderAll(); showToast('已複製這筆指令');
   });
   document.getElementById('deleteCommandBtn').addEventListener('click', () => {
@@ -530,6 +617,34 @@ ${buildStaticHtml(items)}
     downloadFile('index.html', buildFullStaticHtml(commands), 'text/html;charset=utf-8');
   });
   document.getElementById('exportJsonBtn').addEventListener('click', () => downloadFile('command-data.json', JSON.stringify(commands, null, 2), 'application/json;charset=utf-8'));
+  const importJsonInput = document.getElementById('importJsonInput');
+  document.getElementById('importJsonBtn').addEventListener('click', () => importJsonInput.click());
+  importJsonInput.addEventListener('change', async e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      const parsed = JSON.parse(await file.text());
+      const source = Array.isArray(parsed) ? parsed : (parsed && Array.isArray(parsed.commands) ? parsed.commands : null);
+      if (!source || !source.length) throw new Error('JSON 必須是非空的指令陣列，或包含 commands 陣列的物件。');
+      const imported = source.map((item, index) => normalizeCommand(item, index));
+      const seenIds = new Set();
+      imported.forEach(command => {
+        if (seenIds.has(command.id)) command.id = newId();
+        seenIds.add(command.id);
+      });
+      if (!confirm(`即將匯入 ${imported.length} 筆指令，並取代目前的 ${commands.length} 筆資料。是否繼續？`)) return;
+      commands = imported;
+      selectedId = commands[0].id;
+      searchQuery = '';
+      document.getElementById('commandSearch').value = '';
+      saveData(); renderAll();
+      showToast(`已匯入 ${commands.length} 筆指令`);
+    } catch (error) {
+      showToast(`匯入失敗：${error.message || 'JSON 格式錯誤'}`);
+    } finally {
+      importJsonInput.value = '';
+    }
+  });
   document.getElementById('screenshotBtn').addEventListener('click', () => {
     document.body.classList.add('screenshot-mode');
     showToast('截圖模式：按 Esc 或點擊左上角返回');
