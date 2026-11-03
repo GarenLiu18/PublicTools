@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="color-scheme" content="light" />
+<!-- saved from url=(0058)file:///C:/Users/Garen/Downloads/SD_Command_Editor_v5.html -->
+<html lang="zh-Hant"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
 <title>指令文件編輯器</title>
 <style>
   :root {
@@ -186,26 +186,98 @@
     </div>
   </div>
   <div class="header-actions">
-    <button class="btn subtle" id="toggleEditorBtn" aria-pressed="false">編輯模式</button>
+    <button class="btn subtle" id="toggleEditorBtn" aria-pressed="true">返回預覽</button>
     <button class="btn" id="importJsonBtn">匯入資料 JSON</button>
     <button class="btn" id="exportJsonBtn">匯出資料 JSON</button>
     <button class="btn primary" id="exportHtmlBtn">匯出整頁 HTML</button>
-    <input id="importJsonInput" type="file" accept=".json,application/json" hidden />
+    <input id="importJsonInput" type="file" accept=".json,application/json" hidden="">
   </div>
 </header>
 
-<main class="workspace">
+<main class="workspace edit-mode">
   <aside class="panel sidebar">
-    <div class="panel-heading"><h2>指令列表</h2><small id="commandCount">1 筆</small></div>
+    <div class="panel-heading"><h2>指令列表</h2><small id="commandCount">12 筆</small></div>
     <div class="sidebar-tools">
       <button class="btn subtle" id="addCommandBtn">＋ 新增</button>
       <button class="btn" id="duplicateCommandBtn">複製</button>
     </div>
     <div class="sidebar-search">
-      <input id="commandSearch" type="search" placeholder="搜尋指令名稱、參數或說明…" aria-label="搜尋指令" />
+      <input id="commandSearch" type="search" placeholder="搜尋指令名稱、參數或說明…" aria-label="搜尋指令">
     </div>
     <div class="search-status" id="searchStatus"></div>
-    <div class="command-list" id="commandList"></div>
+    <div class="command-list" id="commandList"><div class="command-item" draggable="true" data-drag-id="cmd-1793697969086-yt7h" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1793697969086-yt7h">
+        <span class="command-index">01</span>
+        <span class="command-info"><span class="command-code">@advBG</span><span class="command-desc">冒險模式的背景圖片</span><span class="command-date">創建：2026-11-03</span></span>
+      </button>
+    </div><div class="command-item" draggable="true" data-drag-id="cmd-1" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1">
+        <span class="command-index">02</span>
+        <span class="command-info"><span class="command-code">@sdChar</span><span class="command-desc">SD 角色操作</span><span class="command-date">創建：未記錄</span></span>
+      </button>
+    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793698112230-xy0e" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1793698112230-xy0e">
+        <span class="command-index">03</span>
+        <span class="command-info"><span class="command-code">@advChar</span><span class="command-desc">生成冒險角色</span><span class="command-date">創建：2026-11-03</span></span>
+      </button>
+    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793698509221-8gxj" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1793698509221-8gxj">
+        <span class="command-index">04</span>
+        <span class="command-info"><span class="command-code">@char</span><span class="command-desc">生成小說角色</span><span class="command-date">創建：2026-11-03</span></span>
+      </button>
+    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793698368693-r6dc" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1793698368693-r6dc">
+        <span class="command-index">05</span>
+        <span class="command-info"><span class="command-code">@cmControl</span><span class="command-desc">鏡頭控制</span><span class="command-date">創建：2026-11-03</span></span>
+      </button>
+    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793698687237-wski" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1793698687237-wski">
+        <span class="command-index">06</span>
+        <span class="command-info"><span class="command-code">@gain</span><span class="command-desc">數值修改</span><span class="command-date">創建：2026-11-03</span></span>
+      </button>
+    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793711056985-95nq" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1793711056985-95nq">
+        <span class="command-index">07</span>
+        <span class="command-info"><span class="command-code">@stateChange</span><span class="command-desc">切換遊戲狀態</span><span class="command-date">創建：2026-11-03</span></span>
+      </button>
+    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793711193153-277p" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1793711193153-277p">
+        <span class="command-index">08</span>
+        <span class="command-info"><span class="command-code">@transitionScenes</span><span class="command-desc">轉場效果</span><span class="command-date">創建：2026-11-03</span></span>
+      </button>
+    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793711381241-w2nz" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1793711381241-w2nz">
+        <span class="command-index">09</span>
+        <span class="command-info"><span class="command-code">@customEffect</span><span class="command-desc">客制化特效</span><span class="command-date">創建：2026-11-03</span></span>
+      </button>
+    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793711488361-3zig" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1793711488361-3zig">
+        <span class="command-index">10</span>
+        <span class="command-info"><span class="command-code">{firstName} {lastName}</span><span class="command-desc">玩家名字</span><span class="command-date">創建：2026-11-03</span></span>
+      </button>
+    </div><div class="command-item active" draggable="true" data-drag-id="cmd-1793692277149-os0c" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1793692277149-os0c">
+        <span class="command-index">11</span>
+        <span class="command-info"><span class="command-code">@schedulePush</span><span class="command-desc">排程時間推進</span><span class="command-date">創建：2026-11-03</span></span>
+      </button>
+    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793692482565-xn0b" title="拖曳以調整順序">
+      <span class="drag-grip" aria-hidden="true">⠿</span>
+      <button type="button" class="command-select" data-select-id="cmd-1793692482565-xn0b">
+        <span class="command-index">12</span>
+        <span class="command-info"><span class="command-code">@if "freeMoveSlots() &lt; 10"</span><span class="command-desc">檢查用戶自由行動是否足夠</span><span class="command-date">創建：2026-11-03</span></span>
+      </button>
+    </div></div>
     <div class="sidebar-foot">指令可拖曳排序，順序會同步套用到預覽與匯出。<br>JSON 可匯入／匯出備份；編輯草稿只保存在目前瀏覽器。<br>更新網站時，下載完整 index.html 並覆蓋 Git 專案中的網頁檔。</div>
   </aside>
 
@@ -216,15 +288,15 @@
       <div class="form-grid">
         <div class="field">
           <label for="commandName">指令名稱</label>
-          <input id="commandName" data-field="name" placeholder="例如：@sdChar" />
+          <input id="commandName" data-field="name" placeholder="例如：@sdChar">
         </div>
         <div class="field">
           <label for="commandTitle">文件標題</label>
-          <input id="commandTitle" data-field="title" placeholder="例如：SD 角色操作" />
+          <input id="commandTitle" data-field="title" placeholder="例如：SD 角色操作">
         </div>
         <div class="field">
           <label for="commandCreatedAt">創建日期</label>
-          <input id="commandCreatedAt" type="date" data-field="createdAt" />
+          <input id="commandCreatedAt" type="date" data-field="createdAt">
           <div class="hint">新增指令時會自動填入當天日期，也可以手動修改。</div>
         </div>
         <div class="field full">
@@ -241,7 +313,18 @@
       <div class="separator"></div>
 
       <div class="section-title"><h3>指令參數</h3><span>依序組成指令範例</span></div>
-      <div class="param-list" id="paramList"></div>
+      <div class="param-list" id="paramList"><div class="param-row" data-param-row="0">
+      <div class="param-top">
+        <input class="param-input key" data-param-index="0" data-param-field="key" value="dur" placeholder="參數名稱" aria-label="參數名稱">
+        <input class="param-input" data-param-index="0" data-param-field="value" value="10" placeholder="參數值" aria-label="參數值">
+        <input class="param-input" data-param-index="0" data-param-field="label" value="推進多久" placeholder="顯示標籤" aria-label="顯示標籤">
+        <button class="icon-btn" data-remove-param="0" title="刪除此參數" aria-label="刪除此參數">×</button>
+      </div>
+      <div class="param-bottom">
+        <textarea class="param-input" data-param-index="0" data-param-field="desc" placeholder="這個參數的用途／補充說明">1=1個時間區段（包含當下）</textarea>
+        <label class="flag-label"><input type="checkbox" data-param-index="0" data-param-field="flag"> 無冒號旗標</label>
+      </div>
+    </div></div>
       <button class="add-param" id="addParamBtn">＋ 新增參數</button>
       <div class="separator" style="margin-top:18px"></div>
 
@@ -273,12 +356,31 @@
         <button class="btn" id="copyHtmlBtn">複製整頁 HTML</button>
       </div>
     </div>
-    <div class="preview-scroll" id="previewView">
-      <article class="document-sheet" id="documentPreview"></article>
+    <div class="preview-scroll" id="previewView" style="display: block;">
+      <article class="document-sheet" id="documentPreview"><div class="doc-kicker">COMMAND REFERENCE</div>
+      <div class="doc-heading"><h1>排程時間推進</h1><div class="doc-command-label">@schedulePush</div></div>
+      
+      <div class="doc-created-date">創建日期：2026-11-03</div>
+      
+      <div class="doc-section-heading"><div class="doc-section-label">指令格式與參數</div><button type="button" class="copy-command-btn" data-copy-command="@schedulePush dur:10">複製完整指令</button></div>
+      <div class="syntax-box"><div class="syntax-line">
+      <div class="syntax-unit">
+        <div class="syntax-token command-token">@schedulePush</div>
+        <div class="syntax-label">指令</div>
+        
+      </div>
+      <div class="syntax-unit">
+        <div class="syntax-token">dur:10</div>
+        <div class="syntax-label">推進多久</div>
+        <div class="syntax-desc">1=1個時間區段（包含當下）</div>
+      </div>
+    </div></div>
+      
+      <div class="doc-footer"><span>指令文件 · 11 / 12</span><span>@schedulePush</span></div></article>
     </div>
     <div class="code-view" id="codeView">
       <div class="code-help">以下是完整、可獨立開啟的靜態網頁原始碼，包含 HTML、CSS 與複製指令所需的 JavaScript，不需要後端或外部套件。每次更新時，直接用這份內容覆蓋 Git 專案中的 index.html，再提交並推送即可。</div>
-      <textarea class="code-output" id="htmlOutput" spellcheck="false" readonly></textarea>
+      <textarea class="code-output" id="htmlOutput" spellcheck="false" readonly=""></textarea>
       <div style="display:flex;gap:7px;flex-wrap:wrap">
         <button class="btn primary" id="copyHtmlFromCodeBtn">複製完整 HTML</button>
         <button class="btn" id="downloadHtmlBtn">下載 index.html</button>
@@ -286,7 +388,7 @@
     </div>
   </section>
 </main>
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast">已複製到剪貼簿</div>
 
 <script>
 (() => {
@@ -657,5 +759,6 @@ ${buildStaticHtml(items)}
   renderAll();
 })();
 </script>
-</body>
-</html>
+
+
+</body></html>
