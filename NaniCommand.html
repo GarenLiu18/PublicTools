@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light" />
+<title>指令文件編輯器</title>
+<style>
+  :root {
+    --bg: #f3f5f8;
+    --panel: #ffffff;
+    --line: #e4e8ef;
+    --text: #202938;
+    --muted: #788395;
+    --accent: #d97736;
+    --accent-soft: #fff2e9;
+    --blue: #456b98;
+    --shadow: 0 8px 28px rgba(34, 48, 67, .06);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif; }
+  button, input, textarea { font: inherit; }
+  button { cursor: pointer; }
+  .app-header { height: 68px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .brand-mark { width: 34px; height: 34px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 18px; font-weight: 800; }
+  .brand-title { font-size: 15px; font-weight: 750; letter-spacing: .01em; }
+  .brand-sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+  .btn { border: 1px solid var(--line); background: #fff; color: #445064; border-radius: 9px; padding: 9px 12px; font-size: 12px; font-weight: 650; transition: .15s ease; }
+  .btn:hover { border-color: #c7cfda; background: #fafbfc; }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { background: #c96b2d; }
+  .btn.subtle { background: var(--accent-soft); color: #b85f27; border-color: #f7dfcf; }
+  .btn.danger { color: #b94a48; }
+  .workspace { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 14px; padding: 14px; max-width: 1900px; margin: 0 auto; min-height: calc(100vh - 68px); }
+  .workspace.edit-mode { grid-template-columns: 222px minmax(320px, .9fr) minmax(460px, 1.1fr); }
+  .editor-panel { display: none; }
+  .workspace.edit-mode .editor-panel { display: flex; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); min-width: 0; overflow: hidden; }
+  .panel-heading { min-height: 54px; padding: 13px 15px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .panel-heading h2 { font-size: 13px; margin: 0; font-weight: 750; }
+  .panel-heading small { color: var(--muted); font-size: 10px; }
+  .sidebar { display: flex; flex-direction: column; }
+  .sidebar-tools { display: flex; gap: 6px; padding: 11px 12px; border-bottom: 1px solid var(--line); }
+  .sidebar-tools .btn { flex: 1; padding: 8px 7px; font-size: 11px; }
+  .sidebar-search { padding: 10px 12px 8px; border-bottom: 1px solid var(--line); }
+  .sidebar-search input { width: 100%; border: 1px solid #dfe4eb; border-radius: 8px; padding: 9px 10px; outline: none; background: #fbfcfd; color: var(--text); font-size: 11px; }
+  .sidebar-search input:focus { border-color: #e3a27c; box-shadow: 0 0 0 3px rgba(217,119,54,.10); background: #fff; }
+  .search-status { padding: 7px 13px 0; color: var(--muted); font-size: 9px; }
+  .command-list { padding: 8px; display: flex; flex-direction: column; gap: 5px; overflow-y: auto; max-height: calc(100vh - 185px); }
+  .command-item { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; border: 1px solid transparent; border-radius: 10px; padding: 10px 9px; background: transparent; color: var(--text); }
+  .command-item:hover { background: #f8f9fb; }
+  .command-item.active { background: var(--accent-soft); border-color: #f3d7c5; }
+  .command-index { width: 25px; height: 25px; border-radius: 7px; display: grid; place-items: center; color: #8792a2; background: #f0f2f5; font-size: 10px; font-weight: 700; flex: 0 0 auto; }
+  .command-item.active .command-index { background: #f5d9c7; color: #a9501d; }
+  .command-info { min-width: 0; flex: 1; }
+  .command-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; font-weight: 750; }
+  .command-desc { color: var(--muted); font-size: 10px; margin-top: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .sidebar-foot { margin-top: auto; padding: 12px 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; line-height: 1.6; }
+  .editor-panel { flex-direction: column; }
+  .editor-scroll { padding: 15px; overflow-y: auto; max-height: calc(100vh - 138px); }
+  .section-title { display: flex; justify-content: space-between; align-items: center; margin: 2px 0 10px; }
+  .section-title h3 { margin: 0; font-size: 12px; font-weight: 750; }
+  .section-title span { color: var(--muted); font-size: 10px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .field { min-width: 0; margin-bottom: 11px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { display: block; font-size: 10px; font-weight: 700; color: #667286; margin-bottom: 6px; }
+  .field input, .field textarea, .param-input, .code-output { width: 100%; border: 1px solid #dfe4eb; border-radius: 8px; color: var(--text); background: #fff; outline: none; transition: border .15s, box-shadow .15s; }
+  .field input { padding: 9px 10px; font-size: 12px; }
+  .field textarea { resize: vertical; min-height: 74px; padding: 9px 10px; font-size: 11px; line-height: 1.55; }
+  .field input:focus, .field textarea:focus, .param-input:focus, .code-output:focus { border-color: #e3a27c; box-shadow: 0 0 0 3px rgba(217,119,54,.10); }
+  .hint { color: #929baa; font-size: 9px; margin-top: 5px; line-height: 1.45; }
+  .separator { height: 1px; background: var(--line); margin: 8px 0 15px; }
+  .param-list { display: flex; flex-direction: column; gap: 8px; }
+  .param-row { border: 1px solid var(--line); border-radius: 10px; padding: 9px; background: #fcfcfd; }
+  .param-top { display: grid; grid-template-columns: 85px minmax(80px, 1fr) minmax(90px, 1fr) 28px; gap: 6px; align-items: center; }
+  .param-input { min-width: 0; padding: 7px 8px; font-size: 10px; }
+  .param-input.key { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 700; }
+  .icon-btn { border: 0; background: transparent; color: #a0a8b4; border-radius: 6px; height: 28px; width: 28px; font-size: 15px; }
+  .icon-btn:hover { color: #c34d46; background: #fff0ef; }
+  .param-bottom { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: start; margin-top: 7px; }
+  .param-bottom textarea { min-height: 46px; resize: vertical; padding: 7px 8px; font-size: 10px; line-height: 1.45; }
+  .flag-label { display: flex; align-items: center; gap: 5px; padding: 7px 2px; color: #7a8493; font-size: 10px; white-space: nowrap; }
+  .flag-label input { accent-color: var(--accent); }
+  .add-param { width: 100%; margin-top: 8px; border: 1px dashed #d5dbe4; color: #667286; background: #fbfcfd; border-radius: 8px; padding: 8px; font-size: 10px; }
+  .add-param:hover { border-color: #e2a27c; color: #b85f27; background: #fffaf6; }
+  .editor-bottom-actions { display: flex; gap: 7px; flex-wrap: wrap; padding: 12px 15px; border-top: 1px solid var(--line); margin-top: auto; }
+  .editor-bottom-actions .btn { font-size: 10px; padding: 8px 9px; }
+  .preview-panel { display: flex; flex-direction: column; min-height: 700px; }
+  .preview-tabs { display: flex; gap: 4px; align-items: center; }
+  .tab-btn { border: 0; border-radius: 7px; padding: 7px 9px; background: transparent; color: #8490a0; font-size: 10px; font-weight: 700; }
+  .tab-btn.active { color: #a95120; background: var(--accent-soft); }
+  .preview-actions { display: flex; align-items: center; gap: 6px; }
+  .preview-actions .btn { font-size: 10px; padding: 7px 9px; }
+  .preview-scroll { background: #f0f2f5; flex: 1; overflow: auto; padding: 20px; }
+  .document-sheet { width: 100%; min-height: 580px; max-width: 1050px; margin: 0 auto; background: #fff; border: 1px solid #e7e9ed; box-shadow: 0 5px 22px rgba(20,30,45,.07); padding: clamp(22px, 3vw, 42px); color: #273142; }
+  .doc-kicker { color: #a0a8b4; font-size: 9px; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px; }
+  .doc-heading { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; margin-bottom: 22px; }
+  .doc-heading h1 { margin: 0; font-size: clamp(23px, 3vw, 33px); line-height: 1.2; letter-spacing: -.025em; }
+  .doc-command-label { font: 700 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--accent); background: var(--accent-soft); border: 1px solid #f5dfd1; border-radius: 8px; padding: 8px 10px; white-space: nowrap; }
+  .doc-summary { margin: -10px 0 22px; color: #697587; font-size: 12px; line-height: 1.7; }
+  .doc-legend { white-space: pre-wrap; background: #fffaf6; color: #bb672f; border: 1px solid #f4e4d8; border-radius: 9px; padding: 12px 14px; font: 11px/1.7 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; margin-bottom: 25px; }
+  .doc-section-label { color: #8b95a4; font-size: 9px; font-weight: 800; letter-spacing: .1em; margin: 24px 0 12px; text-transform: uppercase; }
+  .doc-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 24px 0 12px; }
+  .doc-section-heading .doc-section-label { margin: 0; }
+  .copy-command-btn { flex: 0 0 auto; border: 1px solid #f0d7c6; border-radius: 7px; padding: 6px 10px; background: #fff8f3; color: #ad5a28; font-size: 10px; font-weight: 700; line-height: 1.3; }
+  .copy-command-btn:hover { border-color: #dfaa87; background: #fff0e6; }
+  .syntax-box { border: 1px solid #e8ebf0; border-radius: 12px; background: #fcfcfd; padding: 16px; }
+  .syntax-line { display: flex; flex-wrap: wrap; align-items: stretch; gap: 9px; }
+  .syntax-unit { min-width: 70px; max-width: 180px; display: flex; flex-direction: column; gap: 7px; }
+  .syntax-token { display: inline-block; align-self: flex-start; border-bottom: 3px solid #c46d32; padding: 0 2px 7px; color: #252d3a; font: 700 12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow-wrap: anywhere; }
+  .syntax-token.command-token { color: var(--blue); font-size: 13px; }
+  .syntax-label { color: #b66a36; font-size: 10px; font-weight: 750; line-height: 1.45; }
+  .syntax-desc { color: #8993a1; font-size: 9px; line-height: 1.5; }
+  .doc-rules { padding-left: 18px; margin: 0; color: #576274; font-size: 11px; line-height: 1.8; }
+  .doc-rules li { padding-left: 3px; margin: 3px 0; }
+  .doc-note { border-left: 3px solid #d88a55; padding: 10px 13px; color: #687487; background: #fffaf6; font-size: 11px; line-height: 1.7; white-space: pre-wrap; }
+  .doc-footer { border-top: 1px solid #edf0f3; margin-top: 30px; padding-top: 10px; color: #a0a8b4; font-size: 9px; display: flex; justify-content: space-between; }
+  .code-view { display: none; height: 100%; min-height: 560px; background: #fff; padding: 16px; }
+  .code-view.show { display: flex; flex-direction: column; gap: 10px; }
+  .code-help { color: var(--muted); font-size: 10px; line-height: 1.6; }
+  .code-output { flex: 1; min-height: 470px; resize: vertical; padding: 12px; background: #171c26; color: #d9e0ea; border-color: #171c26; border-radius: 9px; font: 10px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; tab-size: 2; }
+  .empty-state { padding: 28px 12px; text-align: center; color: #98a2b1; font-size: 11px; line-height: 1.8; }
+  .toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 12px); opacity: 0; pointer-events: none; background: #263344; color: #fff; border-radius: 9px; padding: 10px 14px; font-size: 11px; box-shadow: 0 8px 25px rgba(0,0,0,.18); transition: .2s; z-index: 100; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .screenshot-mode .app-header, .screenshot-mode .sidebar, .screenshot-mode .editor-panel { display: none !important; }
+  .screenshot-mode .workspace { display: block; padding: 0; min-height: 100vh; }
+  .screenshot-mode .preview-panel { border: 0; border-radius: 0; box-shadow: none; min-height: 100vh; }
+  .screenshot-mode .preview-panel > .panel-heading { display: none; }
+  .screenshot-mode .preview-scroll { padding: 0; background: #fff; overflow: visible; }
+  .screenshot-mode .document-sheet { border: 0; box-shadow: none; max-width: none; min-height: 100vh; padding: 42px 5vw; }
+  .screenshot-mode .document-sheet .doc-heading h1 { font-size: 34px; }
+  @media (max-width: 1200px) {
+    .workspace { grid-template-columns: 210px minmax(0, 1fr); gap: 10px; padding: 10px; }
+    .workspace.edit-mode { grid-template-columns: 200px minmax(280px, .9fr) minmax(390px, 1.1fr); }
+    .preview-scroll { padding: 12px; }
+    .document-sheet { padding: 24px; }
+  }
+  @media (max-width: 950px) {
+    .workspace, .workspace.edit-mode { grid-template-columns: 190px minmax(0, 1fr); }
+    .workspace.edit-mode .preview-panel { grid-column: 1 / -1; }
+    .preview-panel { min-height: 650px; }
+    .editor-scroll { max-height: none; }
+  }
+  @media (max-width: 620px) {
+    .app-header { padding: 0 12px; height: 60px; }
+    .brand-sub { display: none; }
+    .header-actions .btn { padding: 8px; font-size: 10px; }
+    .workspace { display: flex; flex-direction: column; padding: 8px; }
+    .sidebar { min-height: 150px; }
+    .command-list { flex-direction: row; max-height: 100px; overflow-x: auto; }
+    .command-item { min-width: 145px; width: 145px; }
+    .workspace.edit-mode .editor-panel { display: flex; min-height: 600px; }
+    .preview-panel { min-height: 650px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .field.full { grid-column: auto; }
+    .param-top { grid-template-columns: 74px minmax(65px, 1fr) minmax(76px, 1fr) 26px; gap: 4px; }
+    .param-input { padding: 7px 5px; font-size: 9px; }
+    .preview-scroll { padding: 8px; }
+    .document-sheet { padding: 20px 15px; }
+    .doc-heading { flex-direction: column; gap: 10px; }
+    .doc-legend { font-size: 10px; }
+    .syntax-unit { min-width: 60px; }
+  }
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-mark">{ }</div>
+    <div>
+      <div class="brand-title">指令文件編輯器</div>
+      <div class="brand-sub">編輯多筆指令、即時預覽，並產生可直接部署的完整靜態網頁</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn subtle" id="toggleEditorBtn" aria-pressed="false">編輯模式</button>
+    <button class="btn" id="exportJsonBtn">匯出資料 JSON</button>
+    <button class="btn primary" id="exportHtmlBtn">匯出整頁 HTML</button>
+  </div>
+</header>
+
+<main class="workspace">
+  <aside class="panel sidebar">
+    <div class="panel-heading"><h2>指令列表</h2><small id="commandCount">1 筆</small></div>
+    <div class="sidebar-tools">
+      <button class="btn subtle" id="addCommandBtn">＋ 新增</button>
+      <button class="btn" id="duplicateCommandBtn">複製</button>
+    </div>
+    <div class="sidebar-search">
+      <input id="commandSearch" type="search" placeholder="搜尋指令名稱、參數或說明…" aria-label="搜尋指令" />
+    </div>
+    <div class="search-status" id="searchStatus"></div>
+    <div class="command-list" id="commandList"></div>
+    <div class="sidebar-foot">編輯草稿只保存在目前瀏覽器。<br>更新網站時，下載完整 index.html 並覆蓋 Git 專案中的網頁檔；JSON 可用來備份編輯資料。</div>
+  </aside>
+
+  <section class="panel editor-panel">
+    <div class="panel-heading"><h2>編輯區</h2><small>修改後即時更新預覽</small></div>
+    <div class="editor-scroll" id="editorScroll">
+      <div class="section-title"><h3>基本資訊</h3><span>指令名稱與文件標題</span></div>
+      <div class="form-grid">
+        <div class="field">
+          <label for="commandName">指令名稱</label>
+          <input id="commandName" data-field="name" placeholder="例如：@sdChar" />
+        </div>
+        <div class="field">
+          <label for="commandTitle">文件標題</label>
+          <input id="commandTitle" data-field="title" placeholder="例如：SD 角色操作" />
+        </div>
+        <div class="field full">
+          <label for="commandSummary">簡短說明</label>
+          <textarea id="commandSummary" data-field="summary" rows="2" placeholder="這筆指令主要用來做什麼？"></textarea>
+        </div>
+      </div>
+      <div class="separator"></div>
+
+      <div class="section-title"><h3>縮寫／參數說明</h3><span>每行一筆</span></div>
+      <div class="field">
+        <textarea id="commandLegend" data-field="legend" rows="4" placeholder="spos : spawn position（生成位置）"></textarea>
+      </div>
+      <div class="separator"></div>
+
+      <div class="section-title"><h3>指令參數</h3><span>依序組成指令範例</span></div>
+      <div class="param-list" id="paramList"></div>
+      <button class="add-param" id="addParamBtn">＋ 新增參數</button>
+      <div class="separator" style="margin-top:18px"></div>
+
+      <div class="section-title"><h3>預設規則</h3><span>每行會轉成一個項目</span></div>
+      <div class="field">
+        <textarea id="commandRules" data-field="rules" rows="6" placeholder="輸入規則，每一行一點"></textarea>
+      </div>
+      <div class="separator"></div>
+
+      <div class="section-title"><h3>補充說明</h3><span>選填</span></div>
+      <div class="field">
+        <textarea id="commandNote" data-field="note" rows="3" placeholder="其他需要提醒的內容"></textarea>
+      </div>
+    </div>
+    <div class="editor-bottom-actions">
+      <button class="btn danger" id="deleteCommandBtn">刪除這筆指令</button>
+      <button class="btn" id="clearDraftBtn">清除本機草稿</button>
+    </div>
+  </section>
+
+  <section class="panel preview-panel">
+    <div class="panel-heading">
+      <div class="preview-tabs">
+        <button class="tab-btn active" id="previewTab">文件預覽</button>
+        <button class="tab-btn" id="codeTab">HTML 原始碼</button>
+      </div>
+      <div class="preview-actions">
+        <button class="btn" id="screenshotBtn">截圖模式</button>
+        <button class="btn" id="copyHtmlBtn">複製整頁 HTML</button>
+      </div>
+    </div>
+    <div class="preview-scroll" id="previewView">
+      <article class="document-sheet" id="documentPreview"></article>
+    </div>
+    <div class="code-view" id="codeView">
+      <div class="code-help">以下是完整、可獨立開啟的靜態網頁原始碼，包含 HTML、CSS 與複製指令所需的 JavaScript，不需要後端或外部套件。每次更新時，直接用這份內容覆蓋 Git 專案中的 index.html，再提交並推送即可。</div>
+      <textarea class="code-output" id="htmlOutput" spellcheck="false" readonly></textarea>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <button class="btn primary" id="copyHtmlFromCodeBtn">複製完整 HTML</button>
+        <button class="btn" id="downloadHtmlBtn">下載 index.html</button>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const STORAGE_KEY = 'sd-command-editor-v1';
+  const starterData = [{
+    id: 'cmd-1',
+    name: '@sdChar',
+    title: 'SD 角色操作',
+    summary: '在指定場景位置生成 SD 角色，並設定角色的移動、朝向與動畫。',
+    legend: 'spos : spawn position（生成位置）\nmpos : move position（移動位置）\ndir : direction（方向）\nmdur : move duration（移動耗時）',
+    params: [
+      { key: 'id', value: 'sd03', label: '生成編號', desc: '必填。用來區分場景中的角色；同一角色請沿用相同編號。', flag: false },
+      { key: 'name', value: 'FakePlayer_02', label: '資源名稱', desc: '指定要生成的角色資源名稱。第一次生成角色時填寫。', flag: false },
+      { key: 'spos', value: 'M001.A01', label: '生成位置', desc: '指定角色生成的場景格點位置。', flag: false },
+      { key: 'mpos', value: 'M001.A02', label: '移動目標位置', desc: '指定角色生成後要移動到的目標位置。', flag: false },
+      { key: 'dir', value: 'left', label: '方向', desc: '角色面對的方向，可填 left 或 right。', flag: false },
+      { key: 'mdur', value: '0.5', label: '移動時間', desc: '角色移動所需時間，單位依專案設定。', flag: false },
+      { key: 'anim', value: 'sit', label: '動畫覆寫', desc: '指定該名 SD 角色要播放的動畫。', flag: false },
+      { key: 'wait!', value: '', label: '等待', desc: '等待這次移動完成後，才繼續執行下一段腳本。lwait 代表不等待。', flag: true }
+    ],
+    rules: 'id 是編寫者用來控制場景中角色數量的編號。同一隻角色請沿用相同編號，避免場景中重複生成角色。\nname 和 spos 通常只需要在第一次生成角色時填寫，之後可省略。\ndir 未填寫時，預設方向為 right。\nmdur 填寫 0 時，角色會瞬間移動，可用於角色切換場景等情況。\nanim 與 mpos 同時使用時要留意動畫覆寫：角色移動系統會播放 walk；若下一行立即設定 anim，可能會覆蓋移動中的 walk 動畫。',
+    note: ''
+  }];
+
+  let commands = loadData();
+  let selectedId = commands[0].id;
+  let searchQuery = '';
+  let toastTimer;
+
+  function loadData() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length) return parsed;
+      }
+    } catch (e) { console.warn('讀取本機草稿失敗', e); }
+    return JSON.parse(JSON.stringify(starterData));
+  }
+  function saveData() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(commands)); }
+    catch (e) { showToast('無法儲存本機草稿，可能是瀏覽器儲存空間不足。'); }
+  }
+  function current() { return commands.find(c => c.id === selectedId) || commands[0]; }
+  function esc(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+  function lines(value) { return String(value || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean); }
+  function commandTokens(command) {
+    const parts = [{ token: command.name || '@command', label: '指令', desc: command.summary || '', isCommand: true }];
+    (command.params || []).forEach(p => {
+      if (!p.key) return;
+      const token = p.flag ? p.key : `${p.key}:${p.value || '…'}`;
+      parts.push({ token, label: p.label || p.key, desc: p.desc || '', isCommand: false });
+    });
+    return parts;
+  }
+  function syntaxHtml(command) {
+    return `<div class="syntax-line">${commandTokens(command).map(p => `
+      <div class="syntax-unit">
+        <div class="syntax-token${p.isCommand ? ' command-token' : ''}">${esc(p.token)}</div>
+        <div class="syntax-label">${esc(p.label)}</div>
+        ${p.desc ? `<div class="syntax-desc">${esc(p.desc)}</div>` : ''}
+      </div>`).join('')}
+    </div>`;
+  }
+  function fullCommandText(command) {
+    const parts = [command.name || '@command'];
+    (command.params || []).forEach(p => {
+      if (!p.key) return;
+      parts.push(p.flag ? p.key : `${p.key}:${p.value || '…'}`);
+    });
+    return parts.join(' ');
+  }
+  function renderDocument(command, footerText = '指令文件') {
+    const legend = command.legend ? `<div class="doc-section-label">縮寫說明</div><div class="doc-legend">${esc(command.legend)}</div>` : '';
+    const rules = lines(command.rules);
+    const ruleHtml = rules.length ? `<div class="doc-section-label">預設規則</div><ul class="doc-rules">${rules.map(r => `<li>${esc(r)}</li>`).join('')}</ul>` : '';
+    const note = command.note ? `<div class="doc-section-label">補充說明</div><div class="doc-note">${esc(command.note)}</div>` : '';
+    return `<div class="doc-kicker">COMMAND REFERENCE</div>
+      <div class="doc-heading"><h1>${esc(command.title || '未命名指令')}</h1><div class="doc-command-label">${esc(command.name || '@command')}</div></div>
+      ${command.summary ? `<p class="doc-summary">${esc(command.summary)}</p>` : ''}
+      ${legend}
+      <div class="doc-section-heading"><div class="doc-section-label">指令格式與參數</div><button type="button" class="copy-command-btn" data-copy-command="${esc(fullCommandText(command))}">複製完整指令</button></div>
+      <div class="syntax-box">${syntaxHtml(command)}</div>
+      ${ruleHtml}${note}
+      <div class="doc-footer"><span>${esc(footerText)}</span><span>${esc(command.name || '')}</span></div>`;
+  }
+  function renderList() {
+    const list = document.getElementById('commandList');
+    const query = searchQuery.trim().toLocaleLowerCase();
+    const filtered = commands.map((command, index) => ({ command, index })).filter(({ command }) => {
+      if (!query) return true;
+      const searchableText = [
+        command.name, command.title, command.summary, command.legend, command.rules, command.note,
+        ...(command.params || []).flatMap(param => [param.key, param.value, param.label, param.desc])
+      ].join(' ').toLocaleLowerCase();
+      return searchableText.includes(query);
+    });
+    document.getElementById('commandCount').textContent = `${commands.length} 筆`;
+    document.getElementById('searchStatus').textContent = query ? `符合 ${filtered.length} / ${commands.length} 筆` : '';
+    if (!commands.length) { list.innerHTML = '<div class="empty-state">目前沒有指令<br>請新增一筆指令。</div>'; return; }
+    if (!filtered.length) { list.innerHTML = '<div class="empty-state">找不到符合的指令。<br>預覽仍保留目前選取的內容。</div>'; return; }
+    list.innerHTML = filtered.map(({ command: c, index }) => `<button class="command-item${c.id === selectedId ? ' active' : ''}" data-select-id="${esc(c.id)}">
+      <span class="command-index">${String(index + 1).padStart(2, '0')}</span>
+      <span class="command-info"><span class="command-code">${esc(c.name || '@command')}</span><span class="command-desc">${esc(c.title || '未命名指令')}</span></span>
+    </button>`).join('');
+  }
+  function renderEditor() {
+    const c = current();
+    if (!c) return;
+    document.querySelectorAll('[data-field]').forEach(el => { el.value = c[el.dataset.field] || ''; });
+    const params = document.getElementById('paramList');
+    params.innerHTML = (c.params || []).map((p, i) => `<div class="param-row" data-param-row="${i}">
+      <div class="param-top">
+        <input class="param-input key" data-param-index="${i}" data-param-field="key" value="${esc(p.key)}" placeholder="參數名稱" aria-label="參數名稱" />
+        <input class="param-input" data-param-index="${i}" data-param-field="value" value="${esc(p.value)}" placeholder="參數值" aria-label="參數值" ${p.flag ? 'disabled' : ''} />
+        <input class="param-input" data-param-index="${i}" data-param-field="label" value="${esc(p.label)}" placeholder="顯示標籤" aria-label="顯示標籤" />
+        <button class="icon-btn" data-remove-param="${i}" title="刪除此參數" aria-label="刪除此參數">×</button>
+      </div>
+      <div class="param-bottom">
+        <textarea class="param-input" data-param-index="${i}" data-param-field="desc" placeholder="這個參數的用途／補充說明">${esc(p.desc)}</textarea>
+        <label class="flag-label"><input type="checkbox" data-param-index="${i}" data-param-field="flag" ${p.flag ? 'checked' : ''} /> 無冒號旗標</label>
+      </div>
+    </div>`).join('');
+  }
+  function renderPreview() {
+    const c = current();
+    if (!c) return;
+    document.getElementById('documentPreview').innerHTML = renderDocument(c, `指令文件 · ${commands.indexOf(c) + 1} / ${commands.length}`);
+  }
+  function renderAll() { renderList(); renderEditor(); renderPreview(); refreshExport(); }
+  function refreshExport() {
+    document.getElementById('htmlOutput').value = buildFullStaticHtml(commands);
+  }
+  function buildStaticHtml(items) {
+    const cards = items.map((c, i) => `<article class="sd-doc-card">${renderDocument(c, `指令文件 · ${i + 1} / ${items.length}`)}</article>`).join('\n\n');
+    const copyScript = `<script>(function(){if(window.__sdCopyCommandListener)return;window.__sdCopyCommandListener=true;document.addEventListener('click',async function(e){var button=e.target.closest('.copy-command-btn');if(!button)return;var text=button.getAttribute('data-copy-command')||'';var original=button.textContent;try{await navigator.clipboard.writeText(text);}catch(err){var temp=document.createElement('textarea');temp.value=text;temp.style.position='fixed';temp.style.opacity='0';document.body.appendChild(temp);temp.select();try{document.execCommand('copy');}catch(copyError){}temp.remove();}button.textContent='已複製';setTimeout(function(){button.textContent=original;},1400);});})();<\/script>`;
+    return `<style>\n${staticCss()}\n</style>\n\n<div class="sd-docs">\n${cards}\n</div>\n\n${copyScript}`;
+  }
+  function buildFullStaticHtml(items) {
+    return `<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>指令文件</title>
+<style>
+html{background:#f3f5f8}body{margin:0;padding:24px;background:#f3f5f8}@media(max-width:600px){body{padding:8px}}
+</style>
+</head>
+<body>
+${buildStaticHtml(items)}
+</body>
+</html>`;
+  }
+  function staticCss() {
+    return `.sd-docs{display:grid;gap:28px;color:#273142;font-family:Arial,"Noto Sans TC","Microsoft JhengHei",sans-serif}.sd-doc-card{background:#fff;border:1px solid #e7e9ed;padding:34px;box-shadow:0 5px 22px rgba(20,30,45,.06);min-width:0}.sd-doc-card *{box-sizing:border-box}.sd-doc-card .doc-kicker{color:#a0a8b4;font-size:9px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}.sd-doc-card .doc-heading{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:22px}.sd-doc-card .doc-heading h1{margin:0;font-size:30px;line-height:1.2}.sd-doc-card .doc-command-label{font:700 12px monospace;color:#d97736;background:#fff2e9;border:1px solid #f5dfd1;border-radius:8px;padding:8px 10px;white-space:nowrap}.sd-doc-card .doc-summary{margin:-10px 0 22px;color:#697587;font-size:12px;line-height:1.7}.sd-doc-card .doc-section-label{color:#8b95a4;font-size:9px;font-weight:800;letter-spacing:.1em;margin:24px 0 12px;text-transform:uppercase}.sd-doc-card .doc-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 12px}.sd-doc-card .doc-section-heading .doc-section-label{margin:0}.sd-doc-card .copy-command-btn{flex:0 0 auto;border:1px solid #f0d7c6;border-radius:7px;padding:6px 10px;background:#fff8f3;color:#ad5a28;font-size:10px;font-weight:700;line-height:1.3;cursor:pointer}.sd-doc-card .copy-command-btn:hover{border-color:#dfaa87;background:#fff0e6}.sd-doc-card .doc-legend{white-space:pre-wrap;background:#fffaf6;color:#bb672f;border:1px solid #f4e4d8;border-radius:9px;padding:12px 14px;font:11px/1.7 monospace;margin-bottom:25px}.sd-doc-card .syntax-box{border:1px solid #e8ebf0;border-radius:12px;background:#fcfcfd;padding:16px}.sd-doc-card .syntax-line{display:flex;flex-wrap:wrap;align-items:stretch;gap:9px}.sd-doc-card .syntax-unit{min-width:70px;max-width:180px;display:flex;flex-direction:column;gap:7px}.sd-doc-card .syntax-token{display:inline-block;align-self:flex-start;border-bottom:3px solid #c46d32;padding:0 2px 7px;color:#252d3a;font:700 12px monospace;overflow-wrap:anywhere}.sd-doc-card .syntax-token.command-token{color:#456b98;font-size:13px}.sd-doc-card .syntax-label{color:#b66a36;font-size:10px;font-weight:750;line-height:1.45}.sd-doc-card .syntax-desc{color:#8993a1;font-size:9px;line-height:1.5}.sd-doc-card .doc-rules{padding-left:18px;margin:0;color:#576274;font-size:11px;line-height:1.8}.sd-doc-card .doc-rules li{padding-left:3px;margin:3px 0}.sd-doc-card .doc-note{border-left:3px solid #d88a55;padding:10px 13px;color:#687487;background:#fffaf6;font-size:11px;line-height:1.7;white-space:pre-wrap}.sd-doc-card .doc-footer{border-top:1px solid #edf0f3;margin-top:30px;padding-top:10px;color:#a0a8b4;font-size:9px;display:flex;justify-content:space-between}@media(max-width:600px){.sd-doc-card{padding:18px}.sd-doc-card .doc-heading{flex-direction:column;gap:10px}.sd-doc-card .doc-heading h1{font-size:24px}.sd-doc-card .doc-section-heading{align-items:flex-start;flex-wrap:wrap}}`;
+  }
+  function switchTab(tab) {
+    const isCode = tab === 'code';
+    document.getElementById('previewView').style.display = isCode ? 'none' : 'block';
+    document.getElementById('codeView').classList.toggle('show', isCode);
+    document.getElementById('previewTab').classList.toggle('active', !isCode);
+    document.getElementById('codeTab').classList.toggle('active', isCode);
+    refreshExport();
+  }
+  function showToast(message) {
+    const el = document.getElementById('toast');
+    el.textContent = message; el.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+  async function copyText(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast('已複製到剪貼簿');
+    } catch (e) {
+      const temp = document.createElement('textarea'); temp.value = text; temp.style.position = 'fixed'; temp.style.opacity = '0'; document.body.appendChild(temp); temp.select();
+      try { document.execCommand('copy'); showToast('已複製到剪貼簿'); }
+      catch (err) { showToast('複製失敗，請手動選取原始碼。'); }
+      temp.remove();
+    }
+  }
+  function downloadFile(filename, content, type) {
+    const blob = new Blob([content], { type }); const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename; a.style.display = 'none'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+  function newId() { return 'cmd-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6); }
+
+  document.getElementById('toggleEditorBtn').addEventListener('click', () => {
+    const workspace = document.querySelector('.workspace');
+    const enabled = workspace.classList.toggle('edit-mode');
+    const button = document.getElementById('toggleEditorBtn');
+    button.textContent = enabled ? '返回預覽' : '編輯模式';
+    button.setAttribute('aria-pressed', String(enabled));
+    if (enabled) document.getElementById('editorScroll').scrollTop = 0;
+  });
+  document.getElementById('commandSearch').addEventListener('input', e => {
+    searchQuery = e.target.value;
+    renderList();
+  });
+  document.getElementById('commandList').addEventListener('click', e => {
+    const button = e.target.closest('[data-select-id]'); if (!button) return;
+    selectedId = button.dataset.selectId; renderAll();
+  });
+  document.addEventListener('click', e => {
+    const button = e.target.closest('.copy-command-btn');
+    if (button) copyText(button.dataset.copyCommand || '');
+  });
+  document.getElementById('editorScroll').addEventListener('input', e => {
+    const c = current(); if (!c) return;
+    const field = e.target.dataset.field;
+    if (field) { c[field] = e.target.value; saveData(); renderList(); renderPreview(); refreshExport(); return; }
+    const index = e.target.dataset.paramIndex;
+    const paramField = e.target.dataset.paramField;
+    if (index !== undefined && paramField) {
+      c.params[Number(index)][paramField] = paramField === 'flag' ? e.target.checked : e.target.value;
+      if (paramField === 'flag') {
+        const valueInput = document.querySelector(`[data-param-index="${index}"][data-param-field="value"]`);
+        if (valueInput) valueInput.disabled = e.target.checked;
+      }
+      saveData(); renderList(); renderPreview(); refreshExport();
+    }
+  });
+  document.getElementById('paramList').addEventListener('click', e => {
+    const btn = e.target.closest('[data-remove-param]'); if (!btn) return;
+    current().params.splice(Number(btn.dataset.removeParam), 1); saveData(); renderEditor(); renderPreview(); refreshExport();
+  });
+  document.getElementById('addParamBtn').addEventListener('click', () => {
+    current().params.push({ key: 'param', value: '', label: '參數說明', desc: '', flag: false });
+    saveData(); renderEditor(); renderPreview(); refreshExport();
+    document.getElementById('editorScroll').scrollTo({ top: document.getElementById('editorScroll').scrollHeight, behavior: 'smooth' });
+  });
+  document.getElementById('addCommandBtn').addEventListener('click', () => {
+    const c = { id: newId(), name: '@newCommand', title: '新指令', summary: '', legend: '', params: [], rules: '', note: '' };
+    commands.push(c); selectedId = c.id; searchQuery = ''; document.getElementById('commandSearch').value = ''; saveData(); renderAll();
+  });
+  document.getElementById('duplicateCommandBtn').addEventListener('click', () => {
+    const copy = JSON.parse(JSON.stringify(current())); copy.id = newId(); copy.name = (copy.name || '@command') + '_copy'; copy.title = (copy.title || '指令') + '（複本）';
+    commands.splice(commands.indexOf(current()) + 1, 0, copy); selectedId = copy.id; searchQuery = ''; document.getElementById('commandSearch').value = ''; saveData(); renderAll(); showToast('已複製這筆指令');
+  });
+  document.getElementById('deleteCommandBtn').addEventListener('click', () => {
+    if (commands.length <= 1) { showToast('至少保留一筆指令。'); return; }
+    const index = commands.findIndex(c => c.id === selectedId); commands.splice(index, 1); selectedId = commands[Math.max(0, index - 1)].id; saveData(); renderAll();
+  });
+  document.getElementById('clearDraftBtn').addEventListener('click', () => {
+    if (!confirm('確定清除本機草稿並還原範例內容？')) return;
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) { console.warn('清除本機草稿失敗', e); } commands = JSON.parse(JSON.stringify(starterData)); selectedId = commands[0].id; searchQuery = ''; document.getElementById('commandSearch').value = ''; renderAll(); showToast('已還原範例內容');
+  });
+  document.getElementById('previewTab').addEventListener('click', () => switchTab('preview'));
+  document.getElementById('codeTab').addEventListener('click', () => switchTab('code'));
+  document.getElementById('exportHtmlBtn').addEventListener('click', () => { switchTab('code'); showToast('已產生完整 index.html'); });
+  document.getElementById('copyHtmlBtn').addEventListener('click', () => copyText(buildFullStaticHtml(commands)));
+  document.getElementById('copyHtmlFromCodeBtn').addEventListener('click', () => copyText(document.getElementById('htmlOutput').value));
+  document.getElementById('downloadHtmlBtn').addEventListener('click', () => {
+    downloadFile('index.html', buildFullStaticHtml(commands), 'text/html;charset=utf-8');
+  });
+  document.getElementById('exportJsonBtn').addEventListener('click', () => downloadFile('command-data.json', JSON.stringify(commands, null, 2), 'application/json;charset=utf-8'));
+  document.getElementById('screenshotBtn').addEventListener('click', () => {
+    document.body.classList.add('screenshot-mode');
+    showToast('截圖模式：按 Esc 或點擊左上角返回');
+    let back = document.getElementById('screenshotExit');
+    if (!back) { back = document.createElement('button'); back.id = 'screenshotExit'; back.textContent = '← 返回編輯器'; back.className = 'btn'; back.style.cssText = 'position:fixed;top:12px;left:12px;z-index:99;opacity:.18'; back.addEventListener('mouseenter', () => back.style.opacity = '1'); back.addEventListener('mouseleave', () => back.style.opacity = '.18'); back.addEventListener('click', exitScreenshot); document.body.appendChild(back); }
+  });
+  function exitScreenshot() { document.body.classList.remove('screenshot-mode'); const b = document.getElementById('screenshotExit'); if (b) b.remove(); }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') exitScreenshot(); });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
