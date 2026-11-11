@@ -329,5 +329,90 @@
     "params": [],
     "rules": "",
     "note": "範例：Test_TimeSlotCheck.nani\n@if \"freeMoveSlots() < 10\"\n    @goto Basic/Not_EnoughtTimeToPushShcedule\n@else\n    時間足夠，繼續播放……\n    @goto Basic/XXX"
+  },
+  {
+    "id": "cmd-1794366270650-qwe6",
+    "name": "@module",
+    "title": "模組動態加載/卸除",
+    "createdAt": "2026-11-11",
+    "summary": "要求模組載入或卸載內容。同一行兩個都有時先卸載再載入。wait:true 會等所有模組回報載入完成，10 秒沒回應就放行",
+    "legend": "",
+    "params": [
+      {
+        "key": "load",
+        "value": "XXXXModule",
+        "label": "要載入的模組名稱，多個用逗號隔開",
+        "desc": "",
+        "flag": false
+      },
+      {
+        "key": "unload",
+        "value": "XXXXModule",
+        "label": "要載入的模組名稱，多個用逗號隔開",
+        "desc": "",
+        "flag": false
+      },
+      {
+        "key": "wait",
+        "value": "true",
+        "label": "要不要等待加載完畢再執行下一行Nani",
+        "desc": "true/false",
+        "flag": false
+      }
+    ],
+    "rules": "",
+    "note": ""
+  },
+  {
+    "id": "cmd-1794365897883-88xr",
+    "name": "@applyRecruit",
+    "title": "提出招募需求",
+    "createdAt": "2026-11-11",
+    "summary": "提出一筆招募需求，記錄到 PlayerData（職業、提出當週）。履歷表每週開始第二優先顯示",
+    "legend": "",
+    "params": [
+      {
+        "key": "career",
+        "value": "pm",
+        "label": "需求職位",
+        "desc": "pm、programmer、artists",
+        "flag": false
+      }
+    ],
+    "rules": "",
+    "note": ""
+  },
+  {
+    "id": "cmd-1794367209274-fmrq",
+    "name": "hasPendingRecruit()",
+    "title": "有無申請中檢查",
+    "createdAt": "2026-11-11",
+    "summary": "有還沒選應徵者的招募申請時回傳 true（同一時間只能有一筆）",
+    "legend": "",
+    "params": [],
+    "rules": "",
+    "note": ""
+  },
+  {
+    "id": "cmd-1794367299512-vep0",
+    "name": "canRecruit()",
+    "title": "檢查是否團隊人數已滿",
+    "createdAt": "2026-11-11",
+    "summary": "團隊人數還沒到上限時回傳 true，目前強制鎖死6名員工（座位不夠）",
+    "legend": "",
+    "params": [],
+    "rules": "",
+    "note": ""
+  },
+  {
+    "id": "cmd-1794366157555-rf9o",
+    "name": "@passInterview",
+    "title": "通過面試等待安排座位",
+    "createdAt": "2026-11-11",
+    "summary": "選中的應徵者通過面試，申請改成「等待入職」，下週初排好座位才正式加入團隊。之後清空選中的應徵者",
+    "legend": "",
+    "params": [],
+    "rules": "",
+    "note": ""
   }
 ]
