@@ -1,0 +1,333 @@
+[
+  {
+    "id": "cmd-1793697969086-yt7h",
+    "name": "@advBG",
+    "title": "冒險模式的背景圖片",
+    "createdAt": "2026-11-03",
+    "summary": "在冒險模式下覆蓋在角色後面的背景圖片\n（如果不是透明的就請轉用冒險模式用小說模式）\n",
+    "legend": "",
+    "params": [
+      {
+        "key": "name",
+        "value": "Adv_GrayBG",
+        "label": "參數說明",
+        "desc": "",
+        "flag": false
+      },
+      {
+        "key": "hide!",
+        "value": "",
+        "label": "參數說明",
+        "desc": "是否要隱藏\nhide! = 要隱藏\n!hide = 不要隱藏",
+        "flag": true
+      }
+    ],
+    "rules": "",
+    "note": ""
+  },
+  {
+    "id": "cmd-1",
+    "name": "@sdChar",
+    "title": "SD 角色操作",
+    "createdAt": "",
+    "summary": "在指定場景位置生成 SD 角色，並設定角色的移動、朝向與動畫。",
+    "legend": "spos : spawn position（生成位置）\nmpos : move position（移動位置）\ndir : direction（方向）\nmdur : move duration（移動耗時）",
+    "params": [
+      {
+        "key": "id",
+        "value": "sd03",
+        "label": "生成編號",
+        "desc": "必填。用來區分場景中的角色；同一角色請沿用相同編號。",
+        "flag": false
+      },
+      {
+        "key": "name",
+        "value": "FakePlayer_02",
+        "label": "資源名稱",
+        "desc": "指定要生成的角色資源名稱。第一次生成角色時填寫。",
+        "flag": false
+      },
+      {
+        "key": "spos",
+        "value": "M001.A01",
+        "label": "生成位置",
+        "desc": "指定角色生成的場景格點位置。",
+        "flag": false
+      },
+      {
+        "key": "mpos",
+        "value": "M001.A02",
+        "label": "移動目標位置",
+        "desc": "指定角色生成後要移動到的目標位置。",
+        "flag": false
+      },
+      {
+        "key": "dir",
+        "value": "left",
+        "label": "方向",
+        "desc": "角色面對的方向，可填 left 或 right。",
+        "flag": false
+      },
+      {
+        "key": "mdur",
+        "value": "0.5",
+        "label": "移動時間",
+        "desc": "角色移動所需時間，單位依專案設定。",
+        "flag": false
+      },
+      {
+        "key": "anim",
+        "value": "sit",
+        "label": "動畫覆寫",
+        "desc": "指定該名 SD 角色要播放的動畫。",
+        "flag": false
+      },
+      {
+        "key": "wait!",
+        "value": "",
+        "label": "等待",
+        "desc": "等待這次移動完成後，才繼續執行下一段腳本。lwait 代表不等待。",
+        "flag": true
+      }
+    ],
+    "rules": "id 是編寫者用來控制場景中角色數量的編號。同一隻角色請沿用相同編號，避免場景中重複生成角色。\nname 和 spos 通常只需要在第一次生成角色時填寫，之後可省略。\ndir 未填寫時，預設方向為 right。\nmdur 填寫 0 時，角色會瞬間移動，可用於角色切換場景等情況。\nanim 與 mpos 同時使用時要留意動畫覆寫：角色移動系統會播放 walk；若下一行立即設定 anim，可能會覆蓋移動中的 walk 動畫。",
+    "note": ""
+  },
+  {
+    "id": "cmd-1793698112230-xy0e",
+    "name": "@advChar",
+    "title": "生成冒險角色",
+    "createdAt": "2026-11-03",
+    "summary": "在冒險模式下角色的生成",
+    "legend": "",
+    "params": [
+      {
+        "key": "name",
+        "value": "FVP_001_UI.Sad",
+        "label": "檔案名稱",
+        "desc": "Spine表情※如果不是Spine不能加.後詞綴",
+        "flag": false
+      },
+      {
+        "key": "pos",
+        "value": "left",
+        "label": "位置",
+        "desc": "",
+        "flag": false
+      },
+      {
+        "key": "hide!",
+        "value": "",
+        "label": "參數說明",
+        "desc": "是否要隱藏\nhide! = 要隱藏\n!hide = 不要隱藏\n",
+        "flag": true
+      }
+    ],
+    "rules": "不填寫Pos的時候預設是left\n場景上只會有一個advChar\n當有第二個advChar被呼叫進來時，第一個會被隱藏起來\n已經被hide起來的角色當遇到下一個指令的時候會被強制叫出，不用特地在寫!hide，當然也可以寫!hide讓其出現\n",
+    "note": ""
+  },
+  {
+    "id": "cmd-1793698509221-8gxj",
+    "name": "@char",
+    "title": "生成小說角色",
+    "createdAt": "2026-11-03",
+    "summary": "在小說模式下角色的生成",
+    "legend": "",
+    "params": [
+      {
+        "key": "FVP_001.sad",
+        "value": "",
+        "label": "檔案名稱",
+        "desc": "※不同類型只要能設定好就能切換表情",
+        "flag": true
+      },
+      {
+        "key": "pos",
+        "value": "left",
+        "label": "位置 left right 45, 10(具體要看狐狸位置怎麼算)",
+        "desc": "",
+        "flag": false
+      }
+    ],
+    "rules": "",
+    "note": ""
+  },
+  {
+    "id": "cmd-1793698368693-r6dc",
+    "name": "@cmControl",
+    "title": "鏡頭控制",
+    "createdAt": "2026-11-03",
+    "summary": "",
+    "legend": "",
+    "params": [
+      {
+        "key": "focusScene",
+        "value": "M004",
+        "label": "將鏡頭以對準某個場景",
+        "desc": "",
+        "flag": false
+      },
+      {
+        "key": "customPos",
+        "value": "x,y,z",
+        "label": "鏡頭對準指定位置",
+        "desc": "",
+        "flag": false
+      },
+      {
+        "key": "mdur",
+        "value": "1",
+        "label": "鏡頭移動 用時多久",
+        "desc": "",
+        "flag": false
+      }
+    ],
+    "rules": "focusScene與customPos不能同時填寫，同時填寫只有一個會有效，因為不應該存在又要對準場景又要對準特定位置的設計\nmdur要有參數場景才會被加載\n",
+    "note": ""
+  },
+  {
+    "id": "cmd-1793698687237-wski",
+    "name": "@gain",
+    "title": "數值修改",
+    "createdAt": "2026-11-03",
+    "summary": "直接獲得某個數值，可以是負數",
+    "legend": "",
+    "params": [
+      {
+        "key": "type",
+        "value": "Project",
+        "label": "範圍 Project/Attribute",
+        "desc": "",
+        "flag": false
+      },
+      {
+        "key": "status",
+        "value": "Pe",
+        "label": "類別",
+        "desc": "",
+        "flag": false
+      },
+      {
+        "key": "value",
+        "value": "-5",
+        "label": "數值增減",
+        "desc": "",
+        "flag": false
+      }
+    ],
+    "rules": "類別代號\n故事情節：St\n玩法樂趣：Gf\n內容含量：Ca\n畫面表現：Vp\n動作流暢：Af\n運作效能：Pe\n音樂音效：As\n付費機制：Pd\n漏洞       ：Bc\n特色系統：Fs\n色色元素：Hc\n人脈：Co\n領導力：Le\n溝通能力：Cm\n自信心：Cf\n想像力：Im\n美感：Ae\n技術力：Ts\nCEO信任度：Ce",
+    "note": ""
+  },
+  {
+    "id": "cmd-1793711056985-95nq",
+    "name": "@stateChange",
+    "title": "切換遊戲狀態",
+    "createdAt": "2026-11-03",
+    "summary": "告知遊戲接下來要進到什麼狀態，\n目前只有NewGame需要知道這腳本要不要開始編輯日曆模式。",
+    "legend": "",
+    "params": [
+      {
+        "key": "state",
+        "value": "EditCalanderState",
+        "label": "切換遊戲狀態",
+        "desc": "參考補充",
+        "flag": false
+      }
+    ],
+    "rules": "\n",
+    "note": "展開口語戰鬥：BossFightState\n展開日曆編輯：EditCalanderState"
+  },
+  {
+    "id": "cmd-1793711193153-277p",
+    "name": "@transitionScenes",
+    "title": "轉場效果",
+    "createdAt": "2026-11-03",
+    "summary": "",
+    "legend": "",
+    "params": [
+      {
+        "key": "effect",
+        "value": "BlackInOut",
+        "label": "各種效果",
+        "desc": "參考補充說明",
+        "flag": false
+      },
+      {
+        "key": "mode",
+        "value": "in",
+        "label": "效果的 進場/離場",
+        "desc": "in/out",
+        "flag": false
+      },
+      {
+        "key": "dur",
+        "value": "1",
+        "label": "動畫用時",
+        "desc": "",
+        "flag": false
+      }
+    ],
+    "rules": "",
+    "note": "BlackInOut：黑幕效果"
+  },
+  {
+    "id": "cmd-1793711381241-w2nz",
+    "name": "@customEffect",
+    "title": "客制化特效",
+    "createdAt": "2026-11-03",
+    "summary": "",
+    "legend": "",
+    "params": [
+      {
+        "key": "effect",
+        "value": "flash",
+        "label": "各種特效",
+        "desc": "參考補充",
+        "flag": false
+      }
+    ],
+    "rules": "",
+    "note": "flash：閃白\n"
+  },
+  {
+    "id": "cmd-1793711488361-3zig",
+    "name": "{firstName} {lastName}",
+    "title": "玩家名字",
+    "createdAt": "2026-11-03",
+    "summary": "",
+    "legend": "指令意思\n@hidePrinter：關閉對話框\n@showUI InputPlayerNameUI：顯示客制化的輸入用戶名稱畫面\n@waitForPlayerNameInput：\n@hideUI InputPlayerNameUI：關閉客制化的輸入用戶名稱畫面\n@showPrinter：顯示對話框\nPlayer：\n   對話框上的名稱，\n   根據{firstName}+{lastName",
+    "params": [],
+    "rules": "秘書: 這裡是你的賣身契\n@hidePrinter time:0 wait!\n@showUI InputPlayerNameUI\n@waitForPlayerNameInput\n@hideUI InputPlayerNameUI\n@showPrinter time:0 wait!\n秘書: 很高興認識你 {firstName} {lastName}。\nPlayer: 叫我{lastName}就好",
+    "note": ""
+  },
+  {
+    "id": "cmd-1793692277149-os0c",
+    "name": "@schedulePush",
+    "title": "排程時間推進",
+    "createdAt": "2026-11-03",
+    "summary": "",
+    "legend": "",
+    "params": [
+      {
+        "key": "dur",
+        "value": "10",
+        "label": "推進多久",
+        "desc": "1=1個時間區段（包含當下）",
+        "flag": false
+      }
+    ],
+    "rules": "",
+    "note": ""
+  },
+  {
+    "id": "cmd-1793692482565-xn0b",
+    "name": "@if \"freeMoveSlots() < 10\"",
+    "title": "檢查用戶自由行動是否足夠",
+    "createdAt": "2026-11-03",
+    "summary": "",
+    "legend": "",
+    "params": [],
+    "rules": "",
+    "note": "範例：Test_TimeSlotCheck.nani\n@if \"freeMoveSlots() < 10\"\n    @goto Basic/Not_EnoughtTimeToPushShcedule\n@else\n    時間足夠，繼續播放……\n    @goto Basic/XXX"
+  }
+]

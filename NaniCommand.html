@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0058)file:///C:/Users/Garen/Downloads/SD_Command_Editor_v5.html -->
-<html lang="zh-Hant"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light">
-<title>指令文件編輯器</title>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light" />
+<title>指令文件編輯器 v6</title>
 <style>
   :root {
     --bg: #f3f5f8;
@@ -182,103 +182,32 @@
     <div class="brand-mark">{ }</div>
     <div>
       <div class="brand-title">指令文件編輯器</div>
-      <div class="brand-sub">編輯多筆指令、即時預覽，並產生可直接部署的完整靜態網頁</div>
+      <div class="brand-sub">編輯多筆指令、即時預覽，並管理由 JSON 驅動的靜態網站</div>
     </div>
   </div>
   <div class="header-actions">
-    <button class="btn subtle" id="toggleEditorBtn" aria-pressed="true">返回預覽</button>
-    <button class="btn" id="importJsonBtn">匯入資料 JSON</button>
-    <button class="btn" id="exportJsonBtn">匯出資料 JSON</button>
+    <button class="btn subtle" id="toggleEditorBtn" aria-pressed="false">編輯模式</button>
+    <button class="btn" id="loadProjectJsonBtn">讀取 JSON/Command.json</button>
+    <button class="btn" id="importJsonBtn">匯入 JSON 備份</button>
+    <button class="btn" id="exportJsonBtn">下載 Command.json</button>
     <button class="btn primary" id="exportHtmlBtn">匯出整頁 HTML</button>
-    <input id="importJsonInput" type="file" accept=".json,application/json" hidden="">
+    <input id="importJsonInput" type="file" accept=".json,application/json" hidden />
   </div>
 </header>
 
-<main class="workspace edit-mode">
+<main class="workspace">
   <aside class="panel sidebar">
-    <div class="panel-heading"><h2>指令列表</h2><small id="commandCount">12 筆</small></div>
+    <div class="panel-heading"><h2>指令列表</h2><small id="commandCount">1 筆</small></div>
     <div class="sidebar-tools">
       <button class="btn subtle" id="addCommandBtn">＋ 新增</button>
       <button class="btn" id="duplicateCommandBtn">複製</button>
     </div>
     <div class="sidebar-search">
-      <input id="commandSearch" type="search" placeholder="搜尋指令名稱、參數或說明…" aria-label="搜尋指令">
+      <input id="commandSearch" type="search" placeholder="搜尋指令名稱、參數或說明…" aria-label="搜尋指令" />
     </div>
     <div class="search-status" id="searchStatus"></div>
-    <div class="command-list" id="commandList"><div class="command-item" draggable="true" data-drag-id="cmd-1793697969086-yt7h" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1793697969086-yt7h">
-        <span class="command-index">01</span>
-        <span class="command-info"><span class="command-code">@advBG</span><span class="command-desc">冒險模式的背景圖片</span><span class="command-date">創建：2026-11-03</span></span>
-      </button>
-    </div><div class="command-item" draggable="true" data-drag-id="cmd-1" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1">
-        <span class="command-index">02</span>
-        <span class="command-info"><span class="command-code">@sdChar</span><span class="command-desc">SD 角色操作</span><span class="command-date">創建：未記錄</span></span>
-      </button>
-    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793698112230-xy0e" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1793698112230-xy0e">
-        <span class="command-index">03</span>
-        <span class="command-info"><span class="command-code">@advChar</span><span class="command-desc">生成冒險角色</span><span class="command-date">創建：2026-11-03</span></span>
-      </button>
-    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793698509221-8gxj" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1793698509221-8gxj">
-        <span class="command-index">04</span>
-        <span class="command-info"><span class="command-code">@char</span><span class="command-desc">生成小說角色</span><span class="command-date">創建：2026-11-03</span></span>
-      </button>
-    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793698368693-r6dc" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1793698368693-r6dc">
-        <span class="command-index">05</span>
-        <span class="command-info"><span class="command-code">@cmControl</span><span class="command-desc">鏡頭控制</span><span class="command-date">創建：2026-11-03</span></span>
-      </button>
-    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793698687237-wski" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1793698687237-wski">
-        <span class="command-index">06</span>
-        <span class="command-info"><span class="command-code">@gain</span><span class="command-desc">數值修改</span><span class="command-date">創建：2026-11-03</span></span>
-      </button>
-    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793711056985-95nq" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1793711056985-95nq">
-        <span class="command-index">07</span>
-        <span class="command-info"><span class="command-code">@stateChange</span><span class="command-desc">切換遊戲狀態</span><span class="command-date">創建：2026-11-03</span></span>
-      </button>
-    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793711193153-277p" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1793711193153-277p">
-        <span class="command-index">08</span>
-        <span class="command-info"><span class="command-code">@transitionScenes</span><span class="command-desc">轉場效果</span><span class="command-date">創建：2026-11-03</span></span>
-      </button>
-    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793711381241-w2nz" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1793711381241-w2nz">
-        <span class="command-index">09</span>
-        <span class="command-info"><span class="command-code">@customEffect</span><span class="command-desc">客制化特效</span><span class="command-date">創建：2026-11-03</span></span>
-      </button>
-    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793711488361-3zig" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1793711488361-3zig">
-        <span class="command-index">10</span>
-        <span class="command-info"><span class="command-code">{firstName} {lastName}</span><span class="command-desc">玩家名字</span><span class="command-date">創建：2026-11-03</span></span>
-      </button>
-    </div><div class="command-item active" draggable="true" data-drag-id="cmd-1793692277149-os0c" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1793692277149-os0c">
-        <span class="command-index">11</span>
-        <span class="command-info"><span class="command-code">@schedulePush</span><span class="command-desc">排程時間推進</span><span class="command-date">創建：2026-11-03</span></span>
-      </button>
-    </div><div class="command-item" draggable="true" data-drag-id="cmd-1793692482565-xn0b" title="拖曳以調整順序">
-      <span class="drag-grip" aria-hidden="true">⠿</span>
-      <button type="button" class="command-select" data-select-id="cmd-1793692482565-xn0b">
-        <span class="command-index">12</span>
-        <span class="command-info"><span class="command-code">@if "freeMoveSlots() &lt; 10"</span><span class="command-desc">檢查用戶自由行動是否足夠</span><span class="command-date">創建：2026-11-03</span></span>
-      </button>
-    </div></div>
-    <div class="sidebar-foot">指令可拖曳排序，順序會同步套用到預覽與匯出。<br>JSON 可匯入／匯出備份；編輯草稿只保存在目前瀏覽器。<br>更新網站時，下載完整 index.html 並覆蓋 Git 專案中的網頁檔。</div>
+    <div class="command-list" id="commandList"></div>
+    <div class="sidebar-foot">指令可拖曳排序，順序會同步套用到預覽與 JSON。<br>正式網頁會讀取同層級的 JSON/Command.json。<br>更新指令時只需要替換 Command.json，不必重新產生 commands.html。</div>
   </aside>
 
   <section class="panel editor-panel">
@@ -288,15 +217,15 @@
       <div class="form-grid">
         <div class="field">
           <label for="commandName">指令名稱</label>
-          <input id="commandName" data-field="name" placeholder="例如：@sdChar">
+          <input id="commandName" data-field="name" placeholder="例如：@sdChar" />
         </div>
         <div class="field">
           <label for="commandTitle">文件標題</label>
-          <input id="commandTitle" data-field="title" placeholder="例如：SD 角色操作">
+          <input id="commandTitle" data-field="title" placeholder="例如：SD 角色操作" />
         </div>
         <div class="field">
           <label for="commandCreatedAt">創建日期</label>
-          <input id="commandCreatedAt" type="date" data-field="createdAt">
+          <input id="commandCreatedAt" type="date" data-field="createdAt" />
           <div class="hint">新增指令時會自動填入當天日期，也可以手動修改。</div>
         </div>
         <div class="field full">
@@ -313,18 +242,7 @@
       <div class="separator"></div>
 
       <div class="section-title"><h3>指令參數</h3><span>依序組成指令範例</span></div>
-      <div class="param-list" id="paramList"><div class="param-row" data-param-row="0">
-      <div class="param-top">
-        <input class="param-input key" data-param-index="0" data-param-field="key" value="dur" placeholder="參數名稱" aria-label="參數名稱">
-        <input class="param-input" data-param-index="0" data-param-field="value" value="10" placeholder="參數值" aria-label="參數值">
-        <input class="param-input" data-param-index="0" data-param-field="label" value="推進多久" placeholder="顯示標籤" aria-label="顯示標籤">
-        <button class="icon-btn" data-remove-param="0" title="刪除此參數" aria-label="刪除此參數">×</button>
-      </div>
-      <div class="param-bottom">
-        <textarea class="param-input" data-param-index="0" data-param-field="desc" placeholder="這個參數的用途／補充說明">1=1個時間區段（包含當下）</textarea>
-        <label class="flag-label"><input type="checkbox" data-param-index="0" data-param-field="flag"> 無冒號旗標</label>
-      </div>
-    </div></div>
+      <div class="param-list" id="paramList"></div>
       <button class="add-param" id="addParamBtn">＋ 新增參數</button>
       <div class="separator" style="margin-top:18px"></div>
 
@@ -356,39 +274,20 @@
         <button class="btn" id="copyHtmlBtn">複製整頁 HTML</button>
       </div>
     </div>
-    <div class="preview-scroll" id="previewView" style="display: block;">
-      <article class="document-sheet" id="documentPreview"><div class="doc-kicker">COMMAND REFERENCE</div>
-      <div class="doc-heading"><h1>排程時間推進</h1><div class="doc-command-label">@schedulePush</div></div>
-      
-      <div class="doc-created-date">創建日期：2026-11-03</div>
-      
-      <div class="doc-section-heading"><div class="doc-section-label">指令格式與參數</div><button type="button" class="copy-command-btn" data-copy-command="@schedulePush dur:10">複製完整指令</button></div>
-      <div class="syntax-box"><div class="syntax-line">
-      <div class="syntax-unit">
-        <div class="syntax-token command-token">@schedulePush</div>
-        <div class="syntax-label">指令</div>
-        
-      </div>
-      <div class="syntax-unit">
-        <div class="syntax-token">dur:10</div>
-        <div class="syntax-label">推進多久</div>
-        <div class="syntax-desc">1=1個時間區段（包含當下）</div>
-      </div>
-    </div></div>
-      
-      <div class="doc-footer"><span>指令文件 · 11 / 12</span><span>@schedulePush</span></div></article>
+    <div class="preview-scroll" id="previewView">
+      <article class="document-sheet" id="documentPreview"></article>
     </div>
     <div class="code-view" id="codeView">
-      <div class="code-help">以下是完整、可獨立開啟的靜態網頁原始碼，包含 HTML、CSS 與複製指令所需的 JavaScript，不需要後端或外部套件。每次更新時，直接用這份內容覆蓋 Git 專案中的 index.html，再提交並推送即可。</div>
-      <textarea class="code-output" id="htmlOutput" spellcheck="false" readonly=""></textarea>
+      <div class="code-help">以下是完整的靜態網站 commands.html。頁面會自動讀取同層級 JSON/Command.json，不會把指令資料寫死在 HTML。初次部署時下載 commands.html 與 Command.json；之後新增或修改指令，只需更新 JSON/Command.json。</div>
+      <textarea class="code-output" id="htmlOutput" spellcheck="false" readonly></textarea>
       <div style="display:flex;gap:7px;flex-wrap:wrap">
         <button class="btn primary" id="copyHtmlFromCodeBtn">複製完整 HTML</button>
-        <button class="btn" id="downloadHtmlBtn">下載 index.html</button>
+        <button class="btn" id="downloadHtmlBtn">下載 commands.html</button>
       </div>
     </div>
   </section>
 </main>
-<div class="toast" id="toast">已複製到剪貼簿</div>
+<div class="toast" id="toast"></div>
 
 <script>
 (() => {
@@ -414,6 +313,7 @@
     note: ''
   }];
 
+  const hadLocalDraftAtStartup = hasLocalDraft();
   let commands = loadData();
   let selectedId = commands[0].id;
   let searchQuery = '';
@@ -447,6 +347,9 @@
       rules: String(raw.rules ?? ''),
       note: String(raw.note ?? '')
     };
+  }
+  function hasLocalDraft() {
+    try { return Boolean(localStorage.getItem(STORAGE_KEY)); } catch (e) { return false; }
   }
   function loadData() {
     try {
@@ -563,23 +466,11 @@
     const copyScript = `<script>(function(){if(window.__sdCopyCommandListener)return;window.__sdCopyCommandListener=true;document.addEventListener('click',async function(e){var button=e.target.closest('.copy-command-btn');if(!button)return;var text=button.getAttribute('data-copy-command')||'';var original=button.textContent;try{await navigator.clipboard.writeText(text);}catch(err){var temp=document.createElement('textarea');temp.value=text;temp.style.position='fixed';temp.style.opacity='0';document.body.appendChild(temp);temp.select();try{document.execCommand('copy');}catch(copyError){}temp.remove();}button.textContent='已複製';setTimeout(function(){button.textContent=original;},1400);});})();<\/script>`;
     return `<style>\n${staticCss()}\n</style>\n\n<div class="sd-docs">\n${cards}\n</div>\n\n${copyScript}`;
   }
-  function buildFullStaticHtml(items) {
-    return `<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
-<title>指令文件</title>
-<style>
-html{background:#f3f5f8}body{margin:0;padding:24px;background:#f3f5f8}@media(max-width:600px){body{padding:8px}}
-</style>
-</head>
-<body>
-${buildStaticHtml(items)}
-</body>
-</html>`;
+  function buildFullStaticHtml() {
+    const template = "<!DOCTYPE html>\n<html lang=\"zh-Hant\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<meta name=\"color-scheme\" content=\"light\">\n<meta name=\"description\" content=\"指令文件與參數參考。\">\n<title>指令文件</title>\n<style>\nhtml{background:#f3f5f8}body{margin:0;padding:24px;background:#f3f5f8;color:#273142;font-family:Arial,\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif}@media(max-width:600px){body{padding:8px}}\n.site-header{max-width:1050px;margin:0 auto 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.site-title{margin:0;font-size:22px;font-weight:800}.site-status{font-size:11px;color:#8a94a3}.site-search{max-width:1050px;margin:0 auto 18px}.site-search input{width:100%;box-sizing:border-box;border:1px solid #dfe4eb;border-radius:9px;padding:11px 13px;background:#fff;color:#273142;font-size:13px;outline:none}.site-search input:focus{border-color:#e3a27c;box-shadow:0 0 0 3px rgba(217,119,54,.10)}.site-empty{max-width:1050px;margin:30px auto;padding:24px;background:#fff;border:1px solid #e7e9ed;border-radius:10px;color:#788395;font-size:13px;line-height:1.8}.site-empty strong{display:block;color:#364152;margin-bottom:6px}.site-empty button{margin-top:12px;border:1px solid #e4e8ef;border-radius:7px;background:#fff;padding:8px 12px;color:#445064;cursor:pointer}\n.sd-docs{display:grid;gap:28px;color:#273142;font-family:Arial,\"Noto Sans TC\",\"Microsoft JhengHei\",sans-serif}.sd-doc-card{background:#fff;border:1px solid #e7e9ed;padding:34px;box-shadow:0 5px 22px rgba(20,30,45,.06);min-width:0}.sd-doc-card *{box-sizing:border-box}.sd-doc-card .doc-kicker{color:#a0a8b4;font-size:9px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}.sd-doc-card .doc-heading{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:22px}.sd-doc-card .doc-heading h1{margin:0;font-size:30px;line-height:1.2}.sd-doc-card .doc-command-label{font:700 12px monospace;color:#d97736;background:#fff2e9;border:1px solid #f5dfd1;border-radius:8px;padding:8px 10px;white-space:nowrap}.sd-doc-card .doc-summary{margin:-10px 0 22px;color:#697587;font-size:12px;line-height:1.7}.sd-doc-card .doc-created-date{margin:-12px 0 22px;color:#a0a8b4;font-size:10px}.sd-doc-card .doc-section-label{color:#8b95a4;font-size:9px;font-weight:800;letter-spacing:.1em;margin:24px 0 12px;text-transform:uppercase}.sd-doc-card .doc-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 12px}.sd-doc-card .doc-section-heading .doc-section-label{margin:0}.sd-doc-card .copy-command-btn{flex:0 0 auto;border:1px solid #f0d7c6;border-radius:7px;padding:6px 10px;background:#fff8f3;color:#ad5a28;font-size:10px;font-weight:700;line-height:1.3;cursor:pointer}.sd-doc-card .copy-command-btn:hover{border-color:#dfaa87;background:#fff0e6}.sd-doc-card .doc-legend{white-space:pre-wrap;background:#fffaf6;color:#bb672f;border:1px solid #f4e4d8;border-radius:9px;padding:12px 14px;font:11px/1.7 monospace;margin-bottom:25px}.sd-doc-card .syntax-box{border:1px solid #e8ebf0;border-radius:12px;background:#fcfcfd;padding:16px}.sd-doc-card .syntax-line{display:flex;flex-wrap:wrap;align-items:stretch;gap:9px}.sd-doc-card .syntax-unit{min-width:70px;max-width:180px;display:flex;flex-direction:column;gap:7px}.sd-doc-card .syntax-token{display:inline-block;align-self:flex-start;border-bottom:3px solid #c46d32;padding:0 2px 7px;color:#252d3a;font:700 12px monospace;overflow-wrap:anywhere}.sd-doc-card .syntax-token.command-token{color:#456b98;font-size:13px}.sd-doc-card .syntax-label{color:#b66a36;font-size:10px;font-weight:750;line-height:1.45}.sd-doc-card .syntax-desc{color:#8993a1;font-size:9px;line-height:1.5}.sd-doc-card .doc-rules{padding-left:18px;margin:0;color:#576274;font-size:11px;line-height:1.8}.sd-doc-card .doc-rules li{padding-left:3px;margin:3px 0}.sd-doc-card .doc-note{border-left:3px solid #d88a55;padding:10px 13px;color:#687487;background:#fffaf6;font-size:11px;line-height:1.7;white-space:pre-wrap}.sd-doc-card .doc-footer{border-top:1px solid #edf0f3;margin-top:30px;padding-top:10px;color:#a0a8b4;font-size:9px;display:flex;justify-content:space-between}@media(max-width:600px){.sd-doc-card{padding:18px}.sd-doc-card .doc-heading{flex-direction:column;gap:10px}.sd-doc-card .doc-heading h1{font-size:24px}.sd-doc-card .doc-section-heading{align-items:flex-start;flex-wrap:wrap}}\n</style>\n</head>\n<body>\n<header class=\"site-header\"><h1 class=\"site-title\">指令文件</h1><span class=\"site-status\" id=\"dataStatus\">正在讀取 JSON/Command.json…</span></header>\n<div class=\"site-search\"><input id=\"commandSearch\" type=\"search\" placeholder=\"搜尋指令名稱、參數或說明…\" aria-label=\"搜尋指令\"></div>\n<main id=\"commandDocuments\" class=\"sd-docs\"></main>\n<div id=\"emptyState\" class=\"site-empty\" hidden></div>\n<script>\n(() => {\n  const DATA_URL = './JSON/Command.json';\n  const container = document.getElementById('commandDocuments');\n  const status = document.getElementById('dataStatus');\n  const searchInput = document.getElementById('commandSearch');\n  const emptyState = document.getElementById('emptyState');\n  let commands = [];\n\n  function esc(value) {\n    return String(value ?? '').replace(/[&<>\"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[ch]));\n  }\n  function lines(value) { return String(value || '').split(/\\r?\\n/).map(s => s.trim()).filter(Boolean); }\n  function fullCommandText(command) {\n    const parts = [command.name || '@command'];\n    (Array.isArray(command.params) ? command.params : []).forEach(p => {\n      if (!p || !p.key) return;\n      parts.push(p.flag ? p.key : `${p.key}:${p.value || '…'}`);\n    });\n    return parts.join(' ');\n  }\n  function commandTokens(command) {\n    const parts = [{token:command.name || '@command',label:'指令',desc:command.summary || '',isCommand:true}];\n    (Array.isArray(command.params) ? command.params : []).forEach(p => {\n      if (!p || !p.key) return;\n      parts.push({token:p.flag ? p.key : `${p.key}:${p.value || '…'}`,label:p.label || p.key,desc:p.desc || '',isCommand:false});\n    });\n    return parts;\n  }\n  function syntaxHtml(command) {\n    return `<div class=\"syntax-line\">${commandTokens(command).map(p => `<div class=\"syntax-unit\"><div class=\"syntax-token${p.isCommand ? ' command-token' : ''}\">${esc(p.token)}</div><div class=\"syntax-label\">${esc(p.label)}</div>${p.desc ? `<div class=\"syntax-desc\">${esc(p.desc)}</div>` : ''}</div>`).join('')}</div>`;\n  }\n  function renderDocument(command, index, total) {\n    const legend = command.legend ? `<div class=\"doc-section-label\">縮寫說明</div><div class=\"doc-legend\">${esc(command.legend)}</div>` : '';\n    const rules = lines(command.rules);\n    const ruleHtml = rules.length ? `<div class=\"doc-section-label\">預設規則</div><ul class=\"doc-rules\">${rules.map(r => `<li>${esc(r)}</li>`).join('')}</ul>` : '';\n    const note = command.note ? `<div class=\"doc-section-label\">補充說明</div><div class=\"doc-note\">${esc(command.note)}</div>` : '';\n    return `<article class=\"sd-doc-card\"><div class=\"doc-kicker\">COMMAND REFERENCE</div><div class=\"doc-heading\"><h1>${esc(command.title || '未命名指令')}</h1><div class=\"doc-command-label\">${esc(command.name || '@command')}</div></div>${command.summary ? `<p class=\"doc-summary\">${esc(command.summary)}</p>` : ''}<div class=\"doc-created-date\">創建日期：${esc(command.createdAt || '未記錄')}</div>${legend}<div class=\"doc-section-heading\"><div class=\"doc-section-label\">指令格式與參數</div><button type=\"button\" class=\"copy-command-btn\" data-copy-command=\"${esc(fullCommandText(command))}\">複製完整指令</button></div><div class=\"syntax-box\">${syntaxHtml(command)}</div>${ruleHtml}${note}<div class=\"doc-footer\"><span>指令文件 · ${index + 1} / ${total}</span><span>${esc(command.name || '')}</span></div></article>`;\n  }\n  function searchableText(command) {\n    const paramText = (Array.isArray(command.params) ? command.params : []).flatMap(p => p ? [p.key,p.value,p.label,p.desc] : []);\n    return [command.name,command.title,command.createdAt,command.summary,command.legend,command.rules,command.note,...paramText].join(' ').toLocaleLowerCase();\n  }\n  function render() {\n    const query = searchInput.value.trim().toLocaleLowerCase();\n    const filtered = commands.filter(c => !query || searchableText(c).includes(query));\n    container.innerHTML = filtered.map((c, i) => renderDocument(c, commands.indexOf(c), commands.length)).join('');\n    status.textContent = query ? `顯示 ${filtered.length} / ${commands.length} 筆` : `共 ${commands.length} 筆指令`;\n    if (!filtered.length) {\n      emptyState.hidden = false;\n      emptyState.innerHTML = '<strong>找不到符合的指令</strong>請調整搜尋關鍵字。';\n    } else {\n      emptyState.hidden = true;\n      emptyState.textContent = '';\n    }\n  }\n  async function loadCommands() {\n    status.textContent = '正在讀取 JSON/Command.json…';\n    emptyState.hidden = true;\n    try {\n      const response = await fetch(DATA_URL, {cache:'no-store'});\n      if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);\n      const data = await response.json();\n      const source = Array.isArray(data) ? data : (data && Array.isArray(data.commands) ? data.commands : null);\n      if (!source) throw new Error('JSON 格式錯誤：預期為指令陣列，或包含 commands 陣列的物件。');\n      commands = source.filter(c => c && typeof c === 'object' && !Array.isArray(c));\n      if (commands.length !== source.length) throw new Error('JSON 中包含格式錯誤的指令項目。');\n      render();\n    } catch (error) {\n      container.innerHTML = '';\n      status.textContent = 'JSON 讀取失敗';\n      emptyState.hidden = false;\n      emptyState.innerHTML = `<strong>無法讀取 ${esc(DATA_URL)}</strong>${esc(error.message || '未知錯誤')}<br>請確認 commands.html 與 JSON 資料夾位於同一層，且檔名為 Command.json。<br>若你是直接雙擊 commands.html 開啟，請改用 GitHub Pages 網址瀏覽。<br><button type=\"button\" id=\"retryLoad\">重新讀取</button>`;\n      document.getElementById('retryLoad').addEventListener('click', loadCommands);\n    }\n  }\n  async function copyText(text, button) {\n    const original = button.textContent;\n    try {\n      await navigator.clipboard.writeText(text);\n    } catch (error) {\n      const temp = document.createElement('textarea');\n      temp.value = text; temp.style.position = 'fixed'; temp.style.opacity = '0';\n      document.body.appendChild(temp); temp.select();\n      try { if (!document.execCommand('copy')) throw new Error('copy failed'); }\n      catch (copyError) { button.textContent = '複製失敗'; setTimeout(() => button.textContent = original, 1400); temp.remove(); return; }\n      temp.remove();\n    }\n    button.textContent = '已複製';\n    setTimeout(() => button.textContent = original, 1400);\n  }\n  searchInput.addEventListener('input', render);\n  document.addEventListener('click', e => {\n    const button = e.target.closest('.copy-command-btn');\n    if (button) copyText(button.getAttribute('data-copy-command') || '', button);\n  });\n  loadCommands();\n})();\n<\/script>\n</body>\n</html>";
+    return template;
   }
+
   function staticCss() {
     return `.sd-docs{display:grid;gap:28px;color:#273142;font-family:Arial,"Noto Sans TC","Microsoft JhengHei",sans-serif}.sd-doc-card{background:#fff;border:1px solid #e7e9ed;padding:34px;box-shadow:0 5px 22px rgba(20,30,45,.06);min-width:0}.sd-doc-card *{box-sizing:border-box}.sd-doc-card .doc-kicker{color:#a0a8b4;font-size:9px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}.sd-doc-card .doc-heading{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:22px}.sd-doc-card .doc-heading h1{margin:0;font-size:30px;line-height:1.2}.sd-doc-card .doc-command-label{font:700 12px monospace;color:#d97736;background:#fff2e9;border:1px solid #f5dfd1;border-radius:8px;padding:8px 10px;white-space:nowrap}.sd-doc-card .doc-summary{margin:-10px 0 22px;color:#697587;font-size:12px;line-height:1.7}.sd-doc-card .doc-created-date{margin:-12px 0 22px;color:#a0a8b4;font-size:10px}.sd-doc-card .doc-section-label{color:#8b95a4;font-size:9px;font-weight:800;letter-spacing:.1em;margin:24px 0 12px;text-transform:uppercase}.sd-doc-card .doc-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 12px}.sd-doc-card .doc-section-heading .doc-section-label{margin:0}.sd-doc-card .copy-command-btn{flex:0 0 auto;border:1px solid #f0d7c6;border-radius:7px;padding:6px 10px;background:#fff8f3;color:#ad5a28;font-size:10px;font-weight:700;line-height:1.3;cursor:pointer}.sd-doc-card .copy-command-btn:hover{border-color:#dfaa87;background:#fff0e6}.sd-doc-card .doc-legend{white-space:pre-wrap;background:#fffaf6;color:#bb672f;border:1px solid #f4e4d8;border-radius:9px;padding:12px 14px;font:11px/1.7 monospace;margin-bottom:25px}.sd-doc-card .syntax-box{border:1px solid #e8ebf0;border-radius:12px;background:#fcfcfd;padding:16px}.sd-doc-card .syntax-line{display:flex;flex-wrap:wrap;align-items:stretch;gap:9px}.sd-doc-card .syntax-unit{min-width:70px;max-width:180px;display:flex;flex-direction:column;gap:7px}.sd-doc-card .syntax-token{display:inline-block;align-self:flex-start;border-bottom:3px solid #c46d32;padding:0 2px 7px;color:#252d3a;font:700 12px monospace;overflow-wrap:anywhere}.sd-doc-card .syntax-token.command-token{color:#456b98;font-size:13px}.sd-doc-card .syntax-label{color:#b66a36;font-size:10px;font-weight:750;line-height:1.45}.sd-doc-card .syntax-desc{color:#8993a1;font-size:9px;line-height:1.5}.sd-doc-card .doc-rules{padding-left:18px;margin:0;color:#576274;font-size:11px;line-height:1.8}.sd-doc-card .doc-rules li{padding-left:3px;margin:3px 0}.sd-doc-card .doc-note{border-left:3px solid #d88a55;padding:10px 13px;color:#687487;background:#fffaf6;font-size:11px;line-height:1.7;white-space:pre-wrap}.sd-doc-card .doc-footer{border-top:1px solid #edf0f3;margin-top:30px;padding-top:10px;color:#a0a8b4;font-size:9px;display:flex;justify-content:space-between}@media(max-width:600px){.sd-doc-card{padding:18px}.sd-doc-card .doc-heading{flex-direction:column;gap:10px}.sd-doc-card .doc-heading h1{font-size:24px}.sd-doc-card .doc-section-heading{align-items:flex-start;flex-wrap:wrap}}`;
   }
@@ -612,6 +503,29 @@ ${buildStaticHtml(items)}
     const a = document.createElement('a'); a.href = url; a.download = filename; a.style.display = 'none'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500);
   }
   function newId() { return 'cmd-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6); }
+
+  async function loadProjectJson({ silent = false, ask = false } = {}) {
+    try {
+      const response = await fetch('./JSON/Command.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
+      const parsed = await response.json();
+      const source = Array.isArray(parsed) ? parsed : (parsed && Array.isArray(parsed.commands) ? parsed.commands : null);
+      if (!source || !source.length) throw new Error('JSON 必須是非空的指令陣列，或包含 commands 陣列的物件。');
+      const imported = source.map((item, index) => normalizeCommand(item, index));
+      const seenIds = new Set();
+      imported.forEach(command => { if (seenIds.has(command.id)) command.id = newId(); seenIds.add(command.id); });
+      if (ask && !confirm(`即將從 JSON/Command.json 載入 ${imported.length} 筆指令，並取代目前的 ${commands.length} 筆資料。是否繼續？`)) return;
+      commands = imported;
+      selectedId = commands[0].id;
+      searchQuery = '';
+      document.getElementById('commandSearch').value = '';
+      saveData();
+      renderAll();
+      if (!silent) showToast(`已讀取 JSON/Command.json（${commands.length} 筆）`);
+    } catch (error) {
+      if (!silent) showToast(`讀取失敗：${error.message || '無法讀取 JSON/Command.json'}。請透過網站網址開啟，或使用 JSON 備份匯入。`);
+    }
+  }
 
   document.getElementById('toggleEditorBtn').addEventListener('click', () => {
     const workspace = document.querySelector('.workspace');
@@ -712,13 +626,14 @@ ${buildStaticHtml(items)}
   });
   document.getElementById('previewTab').addEventListener('click', () => switchTab('preview'));
   document.getElementById('codeTab').addEventListener('click', () => switchTab('code'));
-  document.getElementById('exportHtmlBtn').addEventListener('click', () => { switchTab('code'); showToast('已產生完整 index.html'); });
+  document.getElementById('exportHtmlBtn').addEventListener('click', () => { switchTab('code'); showToast('已產生完整 commands.html'); });
   document.getElementById('copyHtmlBtn').addEventListener('click', () => copyText(buildFullStaticHtml(commands)));
   document.getElementById('copyHtmlFromCodeBtn').addEventListener('click', () => copyText(document.getElementById('htmlOutput').value));
   document.getElementById('downloadHtmlBtn').addEventListener('click', () => {
-    downloadFile('index.html', buildFullStaticHtml(commands), 'text/html;charset=utf-8');
+    downloadFile('commands.html', buildFullStaticHtml(commands), 'text/html;charset=utf-8');
   });
-  document.getElementById('exportJsonBtn').addEventListener('click', () => downloadFile('command-data.json', JSON.stringify(commands, null, 2), 'application/json;charset=utf-8'));
+  document.getElementById('exportJsonBtn').addEventListener('click', () => downloadFile('Command.json', JSON.stringify(commands, null, 2), 'application/json;charset=utf-8'));
+  document.getElementById('loadProjectJsonBtn').addEventListener('click', () => loadProjectJson({ silent: false, ask: true }));
   const importJsonInput = document.getElementById('importJsonInput');
   document.getElementById('importJsonBtn').addEventListener('click', () => importJsonInput.click());
   importJsonInput.addEventListener('change', async e => {
@@ -757,8 +672,8 @@ ${buildStaticHtml(items)}
   document.addEventListener('keydown', e => { if (e.key === 'Escape') exitScreenshot(); });
 
   renderAll();
+  if (!hadLocalDraftAtStartup) loadProjectJson({ silent: true, ask: false });
 })();
 </script>
-
-
-</body></html>
+</body>
+</html>

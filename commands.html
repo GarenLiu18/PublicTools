@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="指令文件與參數參考。">
+<title>指令文件</title>
+<style>
+html{background:#f3f5f8}body{margin:0;padding:24px;background:#f3f5f8;color:#273142;font-family:Arial,"Noto Sans TC","Microsoft JhengHei",sans-serif}@media(max-width:600px){body{padding:8px}}
+.site-header{max-width:1050px;margin:0 auto 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.site-title{margin:0;font-size:22px;font-weight:800}.site-status{font-size:11px;color:#8a94a3}.site-search{max-width:1050px;margin:0 auto 18px}.site-search input{width:100%;box-sizing:border-box;border:1px solid #dfe4eb;border-radius:9px;padding:11px 13px;background:#fff;color:#273142;font-size:13px;outline:none}.site-search input:focus{border-color:#e3a27c;box-shadow:0 0 0 3px rgba(217,119,54,.10)}.site-empty{max-width:1050px;margin:30px auto;padding:24px;background:#fff;border:1px solid #e7e9ed;border-radius:10px;color:#788395;font-size:13px;line-height:1.8}.site-empty strong{display:block;color:#364152;margin-bottom:6px}.site-empty button{margin-top:12px;border:1px solid #e4e8ef;border-radius:7px;background:#fff;padding:8px 12px;color:#445064;cursor:pointer}
+.sd-docs{display:grid;gap:28px;color:#273142;font-family:Arial,"Noto Sans TC","Microsoft JhengHei",sans-serif}.sd-doc-card{background:#fff;border:1px solid #e7e9ed;padding:34px;box-shadow:0 5px 22px rgba(20,30,45,.06);min-width:0}.sd-doc-card *{box-sizing:border-box}.sd-doc-card .doc-kicker{color:#a0a8b4;font-size:9px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}.sd-doc-card .doc-heading{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:22px}.sd-doc-card .doc-heading h1{margin:0;font-size:30px;line-height:1.2}.sd-doc-card .doc-command-label{font:700 12px monospace;color:#d97736;background:#fff2e9;border:1px solid #f5dfd1;border-radius:8px;padding:8px 10px;white-space:nowrap}.sd-doc-card .doc-summary{margin:-10px 0 22px;color:#697587;font-size:12px;line-height:1.7}.sd-doc-card .doc-created-date{margin:-12px 0 22px;color:#a0a8b4;font-size:10px}.sd-doc-card .doc-section-label{color:#8b95a4;font-size:9px;font-weight:800;letter-spacing:.1em;margin:24px 0 12px;text-transform:uppercase}.sd-doc-card .doc-section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 12px}.sd-doc-card .doc-section-heading .doc-section-label{margin:0}.sd-doc-card .copy-command-btn{flex:0 0 auto;border:1px solid #f0d7c6;border-radius:7px;padding:6px 10px;background:#fff8f3;color:#ad5a28;font-size:10px;font-weight:700;line-height:1.3;cursor:pointer}.sd-doc-card .copy-command-btn:hover{border-color:#dfaa87;background:#fff0e6}.sd-doc-card .doc-legend{white-space:pre-wrap;background:#fffaf6;color:#bb672f;border:1px solid #f4e4d8;border-radius:9px;padding:12px 14px;font:11px/1.7 monospace;margin-bottom:25px}.sd-doc-card .syntax-box{border:1px solid #e8ebf0;border-radius:12px;background:#fcfcfd;padding:16px}.sd-doc-card .syntax-line{display:flex;flex-wrap:wrap;align-items:stretch;gap:9px}.sd-doc-card .syntax-unit{min-width:70px;max-width:180px;display:flex;flex-direction:column;gap:7px}.sd-doc-card .syntax-token{display:inline-block;align-self:flex-start;border-bottom:3px solid #c46d32;padding:0 2px 7px;color:#252d3a;font:700 12px monospace;overflow-wrap:anywhere}.sd-doc-card .syntax-token.command-token{color:#456b98;font-size:13px}.sd-doc-card .syntax-label{color:#b66a36;font-size:10px;font-weight:750;line-height:1.45}.sd-doc-card .syntax-desc{color:#8993a1;font-size:9px;line-height:1.5}.sd-doc-card .doc-rules{padding-left:18px;margin:0;color:#576274;font-size:11px;line-height:1.8}.sd-doc-card .doc-rules li{padding-left:3px;margin:3px 0}.sd-doc-card .doc-note{border-left:3px solid #d88a55;padding:10px 13px;color:#687487;background:#fffaf6;font-size:11px;line-height:1.7;white-space:pre-wrap}.sd-doc-card .doc-footer{border-top:1px solid #edf0f3;margin-top:30px;padding-top:10px;color:#a0a8b4;font-size:9px;display:flex;justify-content:space-between}@media(max-width:600px){.sd-doc-card{padding:18px}.sd-doc-card .doc-heading{flex-direction:column;gap:10px}.sd-doc-card .doc-heading h1{font-size:24px}.sd-doc-card .doc-section-heading{align-items:flex-start;flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<header class="site-header"><h1 class="site-title">指令文件</h1><span class="site-status" id="dataStatus">正在讀取 JSON/Command.json…</span></header>
+<div class="site-search"><input id="commandSearch" type="search" placeholder="搜尋指令名稱、參數或說明…" aria-label="搜尋指令"></div>
+<main id="commandDocuments" class="sd-docs"></main>
+<div id="emptyState" class="site-empty" hidden></div>
+<script>
+(() => {
+  const DATA_URL = './JSON/Command.json';
+  const container = document.getElementById('commandDocuments');
+  const status = document.getElementById('dataStatus');
+  const searchInput = document.getElementById('commandSearch');
+  const emptyState = document.getElementById('emptyState');
+  let commands = [];
+
+  function esc(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+  function lines(value) { return String(value || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean); }
+  function fullCommandText(command) {
+    const parts = [command.name || '@command'];
+    (Array.isArray(command.params) ? command.params : []).forEach(p => {
+      if (!p || !p.key) return;
+      parts.push(p.flag ? p.key : `${p.key}:${p.value || '…'}`);
+    });
+    return parts.join(' ');
+  }
+  function commandTokens(command) {
+    const parts = [{token:command.name || '@command',label:'指令',desc:command.summary || '',isCommand:true}];
+    (Array.isArray(command.params) ? command.params : []).forEach(p => {
+      if (!p || !p.key) return;
+      parts.push({token:p.flag ? p.key : `${p.key}:${p.value || '…'}`,label:p.label || p.key,desc:p.desc || '',isCommand:false});
+    });
+    return parts;
+  }
+  function syntaxHtml(command) {
+    return `<div class="syntax-line">${commandTokens(command).map(p => `<div class="syntax-unit"><div class="syntax-token${p.isCommand ? ' command-token' : ''}">${esc(p.token)}</div><div class="syntax-label">${esc(p.label)}</div>${p.desc ? `<div class="syntax-desc">${esc(p.desc)}</div>` : ''}</div>`).join('')}</div>`;
+  }
+  function renderDocument(command, index, total) {
+    const legend = command.legend ? `<div class="doc-section-label">縮寫說明</div><div class="doc-legend">${esc(command.legend)}</div>` : '';
+    const rules = lines(command.rules);
+    const ruleHtml = rules.length ? `<div class="doc-section-label">預設規則</div><ul class="doc-rules">${rules.map(r => `<li>${esc(r)}</li>`).join('')}</ul>` : '';
+    const note = command.note ? `<div class="doc-section-label">補充說明</div><div class="doc-note">${esc(command.note)}</div>` : '';
+    return `<article class="sd-doc-card"><div class="doc-kicker">COMMAND REFERENCE</div><div class="doc-heading"><h1>${esc(command.title || '未命名指令')}</h1><div class="doc-command-label">${esc(command.name || '@command')}</div></div>${command.summary ? `<p class="doc-summary">${esc(command.summary)}</p>` : ''}<div class="doc-created-date">創建日期：${esc(command.createdAt || '未記錄')}</div>${legend}<div class="doc-section-heading"><div class="doc-section-label">指令格式與參數</div><button type="button" class="copy-command-btn" data-copy-command="${esc(fullCommandText(command))}">複製完整指令</button></div><div class="syntax-box">${syntaxHtml(command)}</div>${ruleHtml}${note}<div class="doc-footer"><span>指令文件 · ${index + 1} / ${total}</span><span>${esc(command.name || '')}</span></div></article>`;
+  }
+  function searchableText(command) {
+    const paramText = (Array.isArray(command.params) ? command.params : []).flatMap(p => p ? [p.key,p.value,p.label,p.desc] : []);
+    return [command.name,command.title,command.createdAt,command.summary,command.legend,command.rules,command.note,...paramText].join(' ').toLocaleLowerCase();
+  }
+  function render() {
+    const query = searchInput.value.trim().toLocaleLowerCase();
+    const filtered = commands.filter(c => !query || searchableText(c).includes(query));
+    container.innerHTML = filtered.map((c, i) => renderDocument(c, commands.indexOf(c), commands.length)).join('');
+    status.textContent = query ? `顯示 ${filtered.length} / ${commands.length} 筆` : `共 ${commands.length} 筆指令`;
+    if (!filtered.length) {
+      emptyState.hidden = false;
+      emptyState.innerHTML = '<strong>找不到符合的指令</strong>請調整搜尋關鍵字。';
+    } else {
+      emptyState.hidden = true;
+      emptyState.textContent = '';
+    }
+  }
+  async function loadCommands() {
+    status.textContent = '正在讀取 JSON/Command.json…';
+    emptyState.hidden = true;
+    try {
+      const response = await fetch(DATA_URL, {cache:'no-store'});
+      if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
+      const data = await response.json();
+      const source = Array.isArray(data) ? data : (data && Array.isArray(data.commands) ? data.commands : null);
+      if (!source) throw new Error('JSON 格式錯誤：預期為指令陣列，或包含 commands 陣列的物件。');
+      commands = source.filter(c => c && typeof c === 'object' && !Array.isArray(c));
+      if (commands.length !== source.length) throw new Error('JSON 中包含格式錯誤的指令項目。');
+      render();
+    } catch (error) {
+      container.innerHTML = '';
+      status.textContent = 'JSON 讀取失敗';
+      emptyState.hidden = false;
+      emptyState.innerHTML = `<strong>無法讀取 ${esc(DATA_URL)}</strong>${esc(error.message || '未知錯誤')}<br>請確認 commands.html 與 JSON 資料夾位於同一層，且檔名為 Command.json。<br>若你是直接雙擊 commands.html 開啟，請改用 GitHub Pages 網址瀏覽。<br><button type="button" id="retryLoad">重新讀取</button>`;
+      document.getElementById('retryLoad').addEventListener('click', loadCommands);
+    }
+  }
+  async function copyText(text, button) {
+    const original = button.textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      const temp = document.createElement('textarea');
+      temp.value = text; temp.style.position = 'fixed'; temp.style.opacity = '0';
+      document.body.appendChild(temp); temp.select();
+      try { if (!document.execCommand('copy')) throw new Error('copy failed'); }
+      catch (copyError) { button.textContent = '複製失敗'; setTimeout(() => button.textContent = original, 1400); temp.remove(); return; }
+      temp.remove();
+    }
+    button.textContent = '已複製';
+    setTimeout(() => button.textContent = original, 1400);
+  }
+  searchInput.addEventListener('input', render);
+  document.addEventListener('click', e => {
+    const button = e.target.closest('.copy-command-btn');
+    if (button) copyText(button.getAttribute('data-copy-command') || '', button);
+  });
+  loadCommands();
+})();
+</script>
+</body>
+</html>
